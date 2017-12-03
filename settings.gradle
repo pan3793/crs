@@ -1,0 +1,10 @@
+include ':crs-eureka-server'
+
+include ':crs-common'
+include ':crs-domain'
+include ':crs-server'
+include ':crs-web'
+
+include ':crs-auth:crs-auth-domain'
+include ':crs-auth:crs-auth-server'
+include ':crs-auth:crs-auth-server-api'
