@@ -18,6 +18,8 @@ buildscript {
 allprojects {
     ext {
         springCloudVersion = 'Edgware.RELEASE'
+		fastjsonVersion = '1.2.41'
+		tomcatEmbedCoreVersion ='8.5.23'
     }
 
 	group = 'pc.crs'
@@ -37,6 +39,7 @@ allprojects {
 		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
 		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
+        mavenLocal()
 	}
 
 	apply plugin: 'kotlin-spring'
@@ -52,7 +55,6 @@ allprojects {
 	dependencies {
 		compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
 		compile("org.jetbrains.kotlin:kotlin-reflect")
-		runtime('org.springframework.boot:spring-boot-devtools')
-		testCompile('org.springframework.boot:spring-boot-starter-test')
+		compile "com.alibaba:fastjson:${fastjsonVersion}"
 	}
 }

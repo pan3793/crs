@@ -1,0 +1,8 @@
+spring:
+  application:
+      name: CrsAuthClient
+
+logging:
+  file: ${HOME}/logs/${spring.application.name}.log
+  level:
+    root: info
