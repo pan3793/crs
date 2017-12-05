@@ -1,5 +1,9 @@
 dependencies {
-    compile(project('::crs-common')) { transitive = false }
+    compile(project(':crs-common'))
+
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     compile 'org.springframework.boot:spring-boot-starter-web'
-    runtime('org.springframework.boot:spring-boot-devtools')
+    runtime 'org.springframework.boot:spring-boot-devtools'
 }

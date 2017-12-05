@@ -1,4 +1,4 @@
-package pc.crs.common.util.web
+package pc.crs.common.web
 
 import com.alibaba.fastjson.JSON
 import org.springframework.http.MediaType

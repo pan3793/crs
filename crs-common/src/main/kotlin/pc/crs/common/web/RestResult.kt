@@ -1,4 +1,4 @@
-package pc.crs.common.util.web
+package pc.crs.common.web
 
 data class RestResult(
         val code: Int,
