@@ -1,6 +1,6 @@
 package pc.crs.auth.domain
 
-import pc.crs.common.domain.BaseDO
+import pc.crs.common.base.domain.BaseDO
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -8,7 +8,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "role")
 data class RoleDO(
-        @Column var code: String = "",
-        @Column var name: String = "",
-        @Column var clientId: Long = -1
+        @Column(nullable = false) var code: String = "",
+        @Column(nullable = false) var name: String = "",
+        @Column(nullable = false) var clientId: Long = -1
 ) : BaseDO()
