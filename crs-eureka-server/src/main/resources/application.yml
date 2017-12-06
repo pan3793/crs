@@ -1,14 +1,10 @@
-spring:
-  application:
-      name: CrsEurekaServer
+server:
+  port: 11000
 
 logging:
   file: ${HOME}/logs/${spring.application.name}.log
   level:
     root: info
-
-server:
-  port: 11000
 
 eureka:
   instance:
@@ -18,3 +14,7 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+spring:
+  application:
+      name: crs-eureka-server

@@ -1,6 +1,19 @@
+server:
+  port: 11001
+
+logging:
+  file: ${HOME}/logs/${spring.application.name}.log
+  level:
+    root: info
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:11000/eureka/
+
 spring:
   application:
-      name: CrsAuthServer
+      name: crs-auth-server
 
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/crs_auth?useSSL=false
@@ -21,10 +34,4 @@ spring:
     serialization:
       indent_output: true
 
-server:
-  port: 11001
 
-logging:
-  file: ${HOME}/logs/${spring.application.name}.log
-  level:
-    root: info

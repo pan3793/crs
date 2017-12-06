@@ -1,8 +1,16 @@
-spring:
-  application:
-      name: CrsAuthClient
+server:
+  port: 11002
 
 logging:
   file: ${HOME}/logs/${spring.application.name}.log
   level:
     root: info
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:11000/eureka/
+
+spring:
+  application:
+      name: crs-auth-client
