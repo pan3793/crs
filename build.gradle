@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.2.0'
-        springBootVersion = '2.0.0.M6'
+        springBootVersion = '2.0.0.M7'
     }
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -19,7 +19,7 @@ buildscript {
 allprojects {
     ext {
 //        springCloudVersion = 'Edgware.RELEASE'
-        springCloudVersion = 'Finchley.M4'
+        springCloudVersion = 'Finchley.M5'
         fastjsonVersion = '1.2.41'
         mysqlConnectorVersion = '5.1.45'
     }
