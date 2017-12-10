@@ -10,7 +10,8 @@ import javax.persistence.Table
 data class AclDO(
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false) var url: String = "",
-        @Column(nullable = false) var permission: String = "",
+        @Column(nullable = false) var anonymous: Boolean = false,
+        @Column(nullable = false) var permissions: String = "",
         @Column(nullable = false) var roleIds: String = "",
         @Column(nullable = false) var priority: Int = 100,
         @Column(nullable = false) var clientId: Long = -1

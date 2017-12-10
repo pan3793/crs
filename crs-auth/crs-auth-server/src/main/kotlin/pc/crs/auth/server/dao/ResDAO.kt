@@ -1,8 +1,8 @@
 package pc.crs.auth.server.dao
 
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import pc.crs.auth.domain.ResDO
+import pc.crs.common.base.dao.BaseDAO
 
 @Repository
-interface ResDAO : JpaRepository<ResDO, Long>
+interface ResDAO : BaseDAO<ResDO>

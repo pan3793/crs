@@ -1,8 +1,11 @@
 package pc.crs.auth.server.dao
 
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import pc.crs.auth.domain.UserDO
+import pc.crs.common.base.dao.BaseDAO
 
 @Repository
-interface UserDAO : JpaRepository<UserDO, Long>
+interface UserDAO : BaseDAO<UserDO> {
+
+    fun findByClientIdAndLoginNameAndEnabled(clientId: Long, loginName: String, enabled: Boolean = true): UserDO?
+}

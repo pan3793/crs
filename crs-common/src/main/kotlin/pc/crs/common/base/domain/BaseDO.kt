@@ -9,9 +9,9 @@ import javax.persistence.*
 
 @MappedSuperclass
 abstract class BaseDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = 0L,
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = -1,
         @Column(nullable = false) var note: String = "",
         @JsonIgnore @CreatedDate @Column(nullable = false) var createTime: LocalDateTime = LocalDateTime.now(),
         @JsonIgnore @LastModifiedDate @Column(nullable = false) var modifiedTime: LocalDateTime = LocalDateTime.now(),
-        @JsonIgnore @Column(nullable = false) var enabled: Boolean = true
+        @Column(nullable = false) var enabled: Boolean = true
 ) : Serializable

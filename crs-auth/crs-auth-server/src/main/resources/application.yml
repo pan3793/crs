@@ -31,7 +31,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
 
   jackson:
+    dateFormat: yyyy-MM-dd HH:mm:ss
     serialization:
-      indent_output: true
+      indentOutput: true
 
 

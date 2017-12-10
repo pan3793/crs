@@ -1,16 +1,32 @@
 package pc.crs.auth.client.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import pc.crs.auth.client.service.AuthService
+import pc.crs.auth.client.service.cloud.AuthService
+import pc.crs.common.bean.RestResult
+import pc.crs.common.bean.failureRestResult
+import pc.crs.common.bean.successRestResult
 
 @RestController
-@RequestMapping("/")
-class AuthController(@Autowired val authService: AuthService) {
+@RequestMapping("/api/auth")
+class AuthController(@Autowired val authService: AuthService,
+                     @Value("\${crs.auth.clientId}") val clientId: Long) {
 
-    @GetMapping("token")
-    fun checkToken(@RequestParam token: String) = authService.checkToken(token)
+    @PostMapping("/login")
+    fun login(@RequestParam loginName: String, @RequestParam password: String): RestResult {
+        val (success, userInfo) = authService.login(clientId, loginName, password)
+
+        return if (success) successRestResult("登录成功", userInfo!!)
+        else failureRestResult("用户名或密码错误")
+    }
+
+    @PostMapping("/logout")
+    fun logout(@RequestParam token: String): RestResult {
+        authService.logout(clientId, token)
+        return successRestResult("注销成功")
+    }
 }
