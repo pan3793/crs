@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
+import pc.crs.auth.client.context.AuthContextHolder
 import pc.crs.auth.client.service.cloud.AuthService
+import pc.crs.auth.common.dto.UserInfo
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.ext.getPostJSONObject
 import pc.crs.common.ext.logger
 import pc.crs.common.ext.writeJSON
+import sun.security.krb5.internal.AuthContext
+import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -26,6 +30,7 @@ class AuthInterceptor(@Autowired val authService: AuthService,
 
         if (authService.checkAnonymous(clientId, uri)) {
             logger.info("uri={} 允许匿名访问", uri)
+            AuthContextHolder.setUserInfo(UserInfo(name = "anonymous"))
             return true
         }
 
@@ -41,7 +46,7 @@ class AuthInterceptor(@Autowired val authService: AuthService,
                 logger.info("token={} 验证通过", token)
                 userInfo?.let {
                     logger.info("获取到 userInfo={}", userInfo)
-                    request.setAttribute("userInfo", userInfo)
+                    AuthContextHolder.setUserInfo(userInfo)
                     return true
                 }
                 logger.error("无法获取 userInfo")
@@ -57,5 +62,9 @@ class AuthInterceptor(@Autowired val authService: AuthService,
         logger.error("获取不到 token")
         response.writeJSON(401, failureRestResult("Token not found."))
         return false
+    }
+
+    override fun afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: Any?, ex: Exception?) {
+        AuthContextHolder.clean()
     }
 }
