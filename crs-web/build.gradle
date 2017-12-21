@@ -1,3 +1,0 @@
-dependencies {
-    runtime('org.springframework.boot:spring-boot-devtools')
-}

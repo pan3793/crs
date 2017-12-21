@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.0'
+        kotlinVersion = '1.2.10'
         springBootVersion = '2.0.0.M7'
     }
     repositories {
@@ -18,9 +18,8 @@ buildscript {
 
 allprojects {
     ext {
-//        springCloudVersion = 'Edgware.RELEASE'
         springCloudVersion = 'Finchley.M5'
-        fastjsonVersion = '1.2.41'
+        fastjsonVersion = '1.2.43'
         mysqlConnectorVersion = '5.1.45'
     }
 
@@ -28,8 +27,6 @@ allprojects {
         resolutionStrategy {
             force "com.alibaba:fastjson:${fastjsonVersion}"
             force "mysql:mysql-connector-java:${mysqlConnectorVersion}"
-//            force "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
-//            force "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
         }
     }
 

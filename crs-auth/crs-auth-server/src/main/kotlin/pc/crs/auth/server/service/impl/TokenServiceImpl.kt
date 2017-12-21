@@ -62,14 +62,8 @@ class TokenServiceImpl(
             logger.info("找到 user={}", it)
             return UserInfo(
                     id = it.id,
-                    code = it.code,
                     name = it.name,
-                    gender = it.gender,
                     loginName = it.loginName,
-                    birthday = it.birthday,
-                    phone = it.phone,
-                    email = it.email,
-                    description = it.description,
                     // TODO roles and resTree 构建
                     roles = emptyList(),
                     resTree = ResTree()
