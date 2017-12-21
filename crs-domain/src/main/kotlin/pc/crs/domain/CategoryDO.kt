@@ -9,5 +9,5 @@ import javax.persistence.Table
 @Table(name = "category")
 data class CategoryDO(
         @Column(nullable = false) var name: String = "",
-        @Column(nullable = false) var description: String = ""
+        @Column(nullable = false, columnDefinition = "text") var description: String = ""
 ) : BaseDO()

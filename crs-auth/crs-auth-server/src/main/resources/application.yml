@@ -16,7 +16,7 @@ spring:
       name: crs-auth-server
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/crs_auth?useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/crs_auth?useSSL=false&useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 123
@@ -28,7 +28,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.MySQL57Dialect
 
   jackson:
     dateFormat: yyyy-MM-dd HH:mm:ss

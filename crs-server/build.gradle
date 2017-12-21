@@ -1,3 +1,12 @@
 dependencies {
     compile(project(':crs-common'))
+    compile(project(':crs-domain'))
+
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+
+    compile 'mysql:mysql-connector-java'
 }

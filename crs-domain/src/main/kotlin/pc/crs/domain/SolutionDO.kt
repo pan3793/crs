@@ -4,13 +4,18 @@ import pc.crs.common.base.domain.BaseDO
 import java.math.BigDecimal
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Index
 import javax.persistence.Table
 
 @Entity
-@Table(name = "solution")
+@Table(name = "solution",indexes = [
+    Index(name = "question_id_index", columnList = "questionId")
+])
 data class SolutionDO(
         @Column(nullable = false) var questionId: Long = -1,
-        @Column(nullable = false) var reply: String = "{}",
+
+        @Column(nullable = false, columnDefinition = "mediumtext") var content: String = "{}",
+
         @Column(nullable = false) var studentId: Long = -1,
         @Column(nullable = false) var studentName: String = "",
         @Column(nullable = false) var teacherId: Long = -1,

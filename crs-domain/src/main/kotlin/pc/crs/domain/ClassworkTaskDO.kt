@@ -5,10 +5,14 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Index
 import javax.persistence.Table
 
 @Entity
-@Table(name = "classwork_task")
+@Table(name = "classwork_task", indexes = [
+    Index(name = "teacher_id_index", columnList = "teacherId"),
+    Index(name = "student_id_index", columnList = "studentId")
+])
 data class ClassworkTaskDO(
         @Column(nullable = false) var classworkId: Long = -1,
         @Column(nullable = false) var courseName: String = "",

@@ -10,6 +10,6 @@ import javax.persistence.Table
 data class ResDO(
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false) var parentId: Long = -1,
-        @Column(nullable = false) var url: String = "",
+        @Column(nullable = false, columnDefinition = "text") var url: String = "",
         @Column(nullable = false) var clientId: Long = -1
 ) : BaseDO()
