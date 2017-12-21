@@ -1,5 +1,5 @@
 server:
-  port: 11001
+  port: 11005
 
 logging:
   file: ${HOME}/logs/${spring.application.name}.log
@@ -13,14 +13,14 @@ eureka:
 
 spring:
   application:
-    name: crs-auth-server
+    name: crs-forum-server
 
   http:
     encoding:
       force: true
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/crs_auth?useSSL=false&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/crs_forum?useSSL=false&useUnicode=true&characterEncoding=utf8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 123

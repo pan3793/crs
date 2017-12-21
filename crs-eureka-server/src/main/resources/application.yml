@@ -17,4 +17,13 @@ eureka:
 
 spring:
   application:
-      name: crs-eureka-server
+    name: crs-eureka-server
+
+  http:
+    encoding:
+      force: true
+
+  jackson:
+    dateFormat: yyyy-MM-dd HH:mm:ss
+    serialization:
+      indentOutput: true
