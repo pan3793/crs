@@ -2,6 +2,9 @@ buildscript {
     ext {
         kotlinVersion = '1.2.10'
         springBootVersion = '2.0.0.M7'
+        springCloudVersion = 'Finchley.M5'
+        fastjsonVersion = '1.2.44'
+        mysqlConnectorVersion = '5.1.45'
     }
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -17,34 +20,25 @@ buildscript {
 }
 
 allprojects {
-    ext {
-        springCloudVersion = 'Finchley.M5'
-        fastjsonVersion = '1.2.43'
-        mysqlConnectorVersion = '5.1.45'
-    }
+    group = 'pc.crs'
+    version = '0.0.1-SNAPSHOT'
+
+    apply plugin: 'io.spring.dependency-management'
 
     configurations.all {
         resolutionStrategy {
             force "com.alibaba:fastjson:${fastjsonVersion}"
             force "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+            force "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
+            force "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
         }
     }
 
-    group = 'pc.crs'
-    version = '0.0.1-SNAPSHOT'
-
-    apply plugin: 'kotlin'
-    apply plugin: "kotlin-jpa"
-    apply plugin: 'kotlin-spring'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
-    sourceCompatibility = 1.8
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
     }
 
     repositories {
@@ -54,17 +48,31 @@ allprojects {
         maven { url 'https://repo.spring.io/libs-milestone' }
         mavenLocal()
     }
+}
 
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
+subprojects {
+
+    apply plugin: 'kotlin'
+    apply plugin: "kotlin-jpa"
+    apply plugin: 'kotlin-spring'
+
+    sourceCompatibility = 1.8
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    noArg {
+        annotation("org.springframework.data.redis.core.RedisHash")
     }
 
     dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8"
+        compile "org.jetbrains.kotlin:kotlin-stdlib"
         compile "org.jetbrains.kotlin:kotlin-reflect"
-        compile "com.alibaba:fastjson"
-        compile "com.fasterxml.jackson.module:jackson-module-kotlin"
     }
 }
+
+

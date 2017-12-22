@@ -7,4 +7,7 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-web'
     runtime 'org.springframework.boot:spring-boot-devtools'
+
+    compile "com.alibaba:fastjson"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin"
 }
