@@ -9,7 +9,7 @@ import javax.persistence.*
 
 @MappedSuperclass
 abstract class BaseDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = -1,
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false, columnDefinition = "text") var note: String = "",
         @JsonIgnore @CreatedDate @Column(nullable = false) var createTime: LocalDateTime = LocalDateTime.now(),
         @JsonIgnore @LastModifiedDate @Column(nullable = false) var modifiedTime: LocalDateTime = LocalDateTime.now(),

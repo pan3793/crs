@@ -1,5 +1,7 @@
 package pc.crs.auth.server.service.impl
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pc.crs.auth.common.dto.ResTree
@@ -10,7 +12,6 @@ import pc.crs.auth.server.dao.RoleResDAO
 import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.redis.TokenDAO
 import pc.crs.auth.server.service.TokenService
-import pc.crs.common.ext.logger
 import java.util.*
 
 @Service
@@ -21,6 +22,8 @@ class TokenServiceImpl(
         @Autowired val resDAO: RoleResDAO,
         @Autowired val roleResDAO: RoleResDAO,
         @Autowired val userRoleResDAO: RoleResDAO) : TokenService {
+
+    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun checkToken(clientId: Long, token: String): Pair<Boolean, UserInfo?> {
         (tokenDAO.findById(token) as TokenDO?)?.let {
@@ -39,11 +42,13 @@ class TokenServiceImpl(
     override fun login(clientId: Long, loginName: String, password: String): Pair<Boolean, UserInfo?> {
         userDAO.findByClientIdAndLoginNameAndEnabled(clientId, loginName)?.let {
             logger.info("user clientId={}，loginName={} 找到", clientId, loginName)
-            fetchUserInfo(it.id)?.let {
-                val token = UUID.randomUUID().toString()
-                tokenDAO.save(TokenDO(token, clientId, it.id).apply { logger.info("生成 token={}", it) })
-                it.token = token
-                return Pair(true, it)
+            it.id?.let {
+                fetchUserInfo(it)?.let {
+                    val token = UUID.randomUUID().toString()
+                    tokenDAO.save(TokenDO(token, clientId, it.id).apply { logger.info("生成 token={}", it) })
+                    it.token = token
+                    return Pair(true, it)
+                }
             }
             logger.error("user clientId={}，loginName={} 不存在或被禁用", clientId, loginName)
             return Pair(false, null)
@@ -61,7 +66,7 @@ class TokenServiceImpl(
         userDAO.findByIdAndEnabled(userId)?.let {
             logger.info("找到 user={}", it)
             return UserInfo(
-                    id = it.id,
+                    id = it.id ?: -1,
                     name = it.name,
                     loginName = it.loginName,
                     // TODO roles and resTree 构建

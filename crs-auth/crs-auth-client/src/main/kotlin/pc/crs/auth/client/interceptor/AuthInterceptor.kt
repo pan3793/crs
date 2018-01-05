@@ -1,5 +1,7 @@
 package pc.crs.auth.client.interceptor
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -9,9 +11,7 @@ import pc.crs.auth.client.service.cloud.AuthService
 import pc.crs.auth.common.dto.UserInfo
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.ext.getPostJSONObject
-import pc.crs.common.ext.logger
 import pc.crs.common.ext.writeJSON
-import sun.security.krb5.internal.AuthContext
 import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -23,6 +23,8 @@ class AuthInterceptor(@Autowired val authService: AuthService,
     companion object {
         val CRS_TOKEN = "CRS-TOKEN"
     }
+
+    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any?): Boolean {
         val uri: String = request.requestURI

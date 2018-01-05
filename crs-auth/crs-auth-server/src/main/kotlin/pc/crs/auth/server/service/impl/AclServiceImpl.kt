@@ -1,5 +1,7 @@
 package pc.crs.auth.server.service.impl
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -9,7 +11,6 @@ import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
 import pc.crs.auth.server.service.AclService
 import pc.crs.auth.server.service.TokenService
-import pc.crs.common.ext.logger
 
 @Service
 class AclServiceImpl(@Autowired val aclDAO: AclDAO,
@@ -21,6 +22,8 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
     companion object {
         val DEFAULT_ACL_UNMATCHED_ACTION = false
     }
+
+    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun checkAnonymous(clientId: Long, url: String): Boolean {
         aclDAO.findAllByClientIdAndEnabled(clientId)
