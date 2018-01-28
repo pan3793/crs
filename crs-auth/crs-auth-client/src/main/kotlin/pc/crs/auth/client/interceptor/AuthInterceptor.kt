@@ -21,10 +21,10 @@ class AuthInterceptor(@Autowired val authService: AuthService,
                       @Value("\${crs.auth.clientId}") val clientId: Long) : HandlerInterceptorAdapter() {
 
     companion object {
-        val CRS_TOKEN = "CRS-TOKEN"
+        const val CRS_TOKEN = "CRS-TOKEN"
     }
 
-    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any?): Boolean {
         val uri: String = request.requestURI
