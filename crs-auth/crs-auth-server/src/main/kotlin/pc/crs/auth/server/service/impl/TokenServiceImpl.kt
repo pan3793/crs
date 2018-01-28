@@ -23,7 +23,7 @@ class TokenServiceImpl(
         @Autowired val roleResDAO: RoleResDAO,
         @Autowired val userRoleResDAO: RoleResDAO) : TokenService {
 
-    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun checkToken(clientId: Long, token: String): Pair<Boolean, UserInfo?> {
         (tokenDAO.findById(token) as TokenDO?)?.let {
@@ -40,7 +40,7 @@ class TokenServiceImpl(
     }
 
     override fun login(clientId: Long, loginName: String, password: String): Pair<Boolean, UserInfo?> {
-        userDAO.findByClientIdAndLoginNameAndEnabled(clientId, loginName)?.let {
+        userDAO.findByClientIdAndLoginName(clientId, loginName)?.let {
             logger.info("user clientId={}，loginName={} 找到", clientId, loginName)
             it.id?.let {
                 fetchUserInfo(it)?.let {
@@ -50,11 +50,11 @@ class TokenServiceImpl(
                     return Pair(true, it)
                 }
             }
-            logger.error("user clientId={}，loginName={} 不存在或被禁用", clientId, loginName)
+            logger.error("user clientId={}，loginName={} 不存在", clientId, loginName)
             return Pair(false, null)
         }
 
-        logger.error("clientId={}，loginName={} 不存在或被禁用", clientId, loginName)
+        logger.error("clientId={}，loginName={} 不存在", clientId, loginName)
         return Pair(false, null)
     }
 
@@ -63,7 +63,7 @@ class TokenServiceImpl(
     }
 
     private fun fetchUserInfo(userId: Long): UserInfo? {
-        userDAO.findByIdAndEnabled(userId)?.let {
+        userDAO.findById(userId).orElse(null)?.let {
             logger.info("找到 user={}", it)
             return UserInfo(
                     id = it.id ?: -1,
@@ -74,7 +74,7 @@ class TokenServiceImpl(
                     resTree = ResTree()
             )
         }
-        logger.error("user id={} 不存在或被禁用", userId)
+        logger.error("user id={} 不存在", userId)
         return null
     }
 }

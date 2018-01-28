@@ -7,5 +7,5 @@ import pc.crs.common.base.dao.BaseDAO
 @Repository
 interface UserRoleDAO : BaseDAO<UserRoleDO> {
 
-    fun findAllByUserIdAndEnabled(userId: Long, enabled: Boolean = true): List<UserRoleDO>
+    fun findAllByUserId(userId: Long): List<UserRoleDO>
 }

@@ -4,10 +4,7 @@ import pc.crs.common.base.domain.BaseDO
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "exam_task", indexes = [
@@ -15,6 +12,7 @@ import javax.persistence.Table
     Index(name = "student_id_index", columnList = "studentId")
 ])
 data class ExamTaskDO(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var classworkId: Long = -1,
         @Column(nullable = false) var courseName: String = "",
         @Column(nullable = false) var teacherId: Long = -1,

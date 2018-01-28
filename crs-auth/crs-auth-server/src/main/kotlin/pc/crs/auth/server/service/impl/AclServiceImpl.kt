@@ -20,13 +20,13 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
                      @Autowired val tokenService: TokenService) : AclService {
 
     companion object {
-        val DEFAULT_ACL_UNMATCHED_ACTION = false
+        const val DEFAULT_ACL_UNMATCHED_ACTION = false
     }
 
-    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun checkAnonymous(clientId: Long, url: String): Boolean {
-        aclDAO.findAllByClientIdAndEnabled(clientId)
+        aclDAO.findAllByClientId(clientId)
                 .firstOrNull { pathMatcher.match(it.url, url) }
                 ?.let {
                     logger.info("匹配到 acl={}", it)
@@ -43,13 +43,13 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
             return false
         }
 
-        userDAO.findByIdAndEnabled(userInfo.id)?.let {
+        userDAO.findById(userInfo.id).orElse(null)?.let {
             logger.info("找到 user")
 
-            val userRoleIds = userRoleDAO.findAllByUserIdAndEnabled(userInfo.id).map { it.roleId }
+            val userRoleIds = userRoleDAO.findAllByUserId(userInfo.id).map { it.roleId }
             logger.info("用户拥有角色 userRoleIds={}", userRoleIds)
 
-            val aclRoleIds = aclDAO.findAllByClientIdAndEnabled(clientId, Sort.by("priority"))
+            val aclRoleIds = aclDAO.findAllByClientId(clientId, Sort.by("priority"))
                     .firstOrNull { pathMatcher.match(it.url, url) }
                     ?.roleIds?.split(',')?.filterNot { it.isBlank() }?.map { it.toLong() } ?: emptyList()
             logger.info("acl 要求角色 aclRoleIds={}", aclRoleIds)
@@ -62,7 +62,7 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
                 false
             }
         }
-        logger.error("user 不存在被禁用")
+        logger.error("user 不存在")
         return false
     }
 }

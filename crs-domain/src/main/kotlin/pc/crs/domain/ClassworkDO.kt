@@ -10,6 +10,7 @@ import javax.persistence.*
     Index(name = "course_id_index", columnList = "courseId")
 ])
 data class ClassworkDO(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false, columnDefinition = "text") var description: String = "",
         @Column(nullable = false) var teacherId: Long = -1,

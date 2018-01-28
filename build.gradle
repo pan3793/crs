@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.10'
+        kotlinVersion = '1.2.20'
         springBootVersion = '2.0.0.M7'
         springCloudVersion = 'Finchley.M5'
         fastjsonVersion = '1.2.44'
@@ -57,6 +57,7 @@ subprojects {
     apply plugin: 'kotlin-spring'
 
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"

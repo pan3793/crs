@@ -7,5 +7,5 @@ import pc.crs.common.base.dao.BaseDAO
 @Repository
 interface UserDAO : BaseDAO<UserDO> {
 
-    fun findByClientIdAndLoginNameAndEnabled(clientId: Long, loginName: String, enabled: Boolean = true): UserDO?
+    fun findByClientIdAndLoginName(clientId: Long, loginName: String): UserDO?
 }

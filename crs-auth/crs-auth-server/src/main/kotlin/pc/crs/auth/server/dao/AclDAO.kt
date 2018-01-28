@@ -8,6 +8,6 @@ import pc.crs.common.base.dao.BaseDAO
 @Repository
 interface AclDAO : BaseDAO<AclDO> {
 
-    fun findAllByClientIdAndEnabled(clientId: Long, sort: Sort = Sort.unsorted(), enabled: Boolean = true): List<AclDO>
+    fun findAllByClientId(clientId: Long, sort: Sort = Sort.unsorted()): List<AclDO>
 
 }

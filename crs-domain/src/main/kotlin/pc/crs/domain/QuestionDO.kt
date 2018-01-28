@@ -2,16 +2,14 @@ package pc.crs.domain
 
 import pc.crs.common.base.domain.BaseDO
 import java.math.BigDecimal
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "question", indexes = [
     Index(name = "course_id_index", columnList = "courseId")
 ])
 data class QuestionDO(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var courseId: Long = -1,
         @Column(nullable = false) var score: BigDecimal = BigDecimal.ZERO,
 

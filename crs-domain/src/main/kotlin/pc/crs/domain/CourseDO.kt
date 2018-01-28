@@ -8,6 +8,7 @@ import javax.persistence.*
     Index(name = "category_id_index", columnList = "categoryId")
 ])
 data class CourseDO(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false) var categoryId: Long = -1,
         @Column(nullable = false) var teacherId: Long = -1,
