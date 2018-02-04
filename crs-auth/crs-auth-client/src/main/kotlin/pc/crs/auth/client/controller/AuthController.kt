@@ -13,12 +13,11 @@ import pc.crs.common.bean.successRestResult
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthController(@Autowired val authService: AuthService,
-                     @Value("\${crs.auth.clientId}") val clientId: Long) {
+class AuthController(@Autowired val authService: AuthService) {
 
     @PostMapping("/login")
     fun login(@RequestParam loginName: String, @RequestParam password: String): RestResult {
-        val (success, userInfo) = authService.login(clientId, loginName, password)
+        val (success, userInfo) = authService.login(loginName, password)
 
         return if (success) successRestResult("登录成功", userInfo!!)
         else failureRestResult("用户名或密码错误")
@@ -26,7 +25,7 @@ class AuthController(@Autowired val authService: AuthService,
 
     @PostMapping("/logout")
     fun logout(@RequestParam token: String): RestResult {
-        authService.logout(clientId, token)
+        authService.logout(token)
         return successRestResult("注销成功")
     }
 }

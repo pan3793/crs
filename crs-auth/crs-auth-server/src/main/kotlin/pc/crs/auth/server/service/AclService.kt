@@ -1,8 +1,10 @@
 package pc.crs.auth.server.service
 
+import pc.crs.auth.common.dto.UserInfo
+
 interface AclService {
 
-    fun checkAnonymous(clientId: Long, url: String): Boolean
+    fun checkAnonymous(url: String): Boolean
 
-    fun checkPermission(clientId: Long, token: String, url: String): Boolean
+    fun checkPermission(token: String, url: String): Triple<Boolean, String, UserInfo?>
 }

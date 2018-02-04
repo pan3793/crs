@@ -10,23 +10,24 @@ import pc.crs.auth.domain.redis.TokenDO
 import pc.crs.auth.server.dao.RoleDAO
 import pc.crs.auth.server.dao.RoleResDAO
 import pc.crs.auth.server.dao.UserDAO
+import pc.crs.auth.server.dao.UserRoleDAO
 import pc.crs.auth.server.dao.redis.TokenDAO
 import pc.crs.auth.server.service.TokenService
 import java.util.*
 
 @Service
 class TokenServiceImpl(
-        @Autowired val tokenDAO: TokenDAO,
-        @Autowired val userDAO: UserDAO,
-        @Autowired val roleDAO: RoleDAO,
-        @Autowired val resDAO: RoleResDAO,
-        @Autowired val roleResDAO: RoleResDAO,
-        @Autowired val userRoleResDAO: RoleResDAO) : TokenService {
+        @Autowired private val tokenDAO: TokenDAO,
+        @Autowired private val userDAO: UserDAO,
+        @Autowired private val roleDAO: RoleDAO,
+        @Autowired private val resDAO: RoleResDAO,
+        @Autowired private val roleResDAO: RoleResDAO,
+        @Autowired private val userRoleDAO: UserRoleDAO) : TokenService {
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun checkToken(clientId: Long, token: String): Pair<Boolean, UserInfo?> {
-        (tokenDAO.findById(token) as TokenDO?)?.let {
+    override fun checkToken(token: String): Pair<Boolean, UserInfo?> {
+        tokenDAO.findById(token).orElse(null)?.let {
             logger.info("token={} 在 redis 中找到", token)
 
             fetchUserInfo(it.userId)?.let {
@@ -39,38 +40,40 @@ class TokenServiceImpl(
         return Pair(false, null)
     }
 
-    override fun login(clientId: Long, loginName: String, password: String): Pair<Boolean, UserInfo?> {
-        userDAO.findByClientIdAndLoginName(clientId, loginName)?.let {
-            logger.info("user clientId={}，loginName={} 找到", clientId, loginName)
+    override fun login(loginName: String, password: String): Pair<Boolean, UserInfo?> {
+        userDAO.findByLoginName(loginName)?.let {
+            logger.info("user loginName={} 找到", loginName)
             it.id?.let {
                 fetchUserInfo(it)?.let {
                     val token = UUID.randomUUID().toString()
-                    tokenDAO.save(TokenDO(token, clientId, it.id).apply { logger.info("生成 token={}", it) })
+                    tokenDAO.save(TokenDO(token, it.id!!).apply { logger.info("生成 token={}", it) })
                     it.token = token
                     return Pair(true, it)
                 }
             }
-            logger.error("user clientId={}，loginName={} 不存在", clientId, loginName)
+            logger.error("user loginName={} 不存在", loginName)
             return Pair(false, null)
         }
 
-        logger.error("clientId={}，loginName={} 不存在", clientId, loginName)
+        logger.error("loginName={} 不存在", loginName)
         return Pair(false, null)
     }
 
-    override fun logout(clientId: Long, token: String) {
+    override fun logout(token: String) {
         tokenDAO.deleteById(token)
     }
 
+    // affirmative属性将在checkPermission中设置
     private fun fetchUserInfo(userId: Long): UserInfo? {
         userDAO.findById(userId).orElse(null)?.let {
             logger.info("找到 user={}", it)
+            val roleNames = roleDAO.findAllById(userRoleDAO.findAllByUserId(userId).map { it.roleId }).map { it.name }
             return UserInfo(
-                    id = it.id ?: -1,
+                    id = it.id,
                     name = it.name,
                     loginName = it.loginName,
-                    // TODO roles and resTree 构建
-                    roles = emptyList(),
+                    roles = roleNames,
+                    // TODO resTree 构建
                     resTree = ResTree()
             )
         }

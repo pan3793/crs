@@ -11,32 +11,32 @@ import pc.crs.auth.server.service.TokenService
 
 @RestController
 @RequestMapping("/api/client")
-class AuthClientController(@Autowired val aclService: AclService,
-                           @Autowired val tokenService: TokenService) {
+class AuthClientController(@Autowired private val aclService: AclService,
+                           @Autowired private val tokenService: TokenService) {
 
     @PostMapping("/checkAnonymous")
-    fun checkAnonymous(@RequestParam clientId: Long, @RequestParam url: String): Boolean {
-        return aclService.checkAnonymous(clientId, url)
+    fun checkAnonymous(@RequestParam url: String): Boolean {
+        return aclService.checkAnonymous(url)
     }
 
     @PostMapping("/checkPermission")
-    fun checkPermission(@RequestParam clientId: Long, @RequestParam token: String, @RequestParam url: String): Boolean {
-        return aclService.checkPermission(clientId, token, url)
+    fun checkPermission(@RequestParam token: String, @RequestParam url: String): Triple<Boolean, String, UserInfo?> {
+        return aclService.checkPermission(token, url)
     }
 
     @PostMapping("/checkToken")
-    fun checkToken(@RequestParam clientId: Long, @RequestParam token: String): Pair<Boolean, UserInfo?> {
-        return tokenService.checkToken(clientId, token)
+    fun checkToken(@RequestParam token: String): Pair<Boolean, UserInfo?> {
+        return tokenService.checkToken(token)
     }
 
     @PostMapping("/login")
-    fun login(@RequestParam clientId: Long, @RequestParam loginName: String, @RequestParam password: String)
+    fun login(@RequestParam loginName: String, @RequestParam password: String)
             : Pair<Boolean, UserInfo?> {
-        return tokenService.login(clientId, loginName, password)
+        return tokenService.login(loginName, password)
     }
 
     @PostMapping("/logout")
-    fun logout(@RequestParam clientId: Long, @RequestParam token: String) {
-        tokenService.logout(clientId, token)
+    fun logout(@RequestParam token: String) {
+        tokenService.logout(token)
     }
 }

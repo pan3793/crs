@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.util.PathMatcher
+import pc.crs.auth.common.dto.UserInfo
 import pc.crs.auth.server.dao.AclDAO
 import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
@@ -25,8 +26,8 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun checkAnonymous(clientId: Long, url: String): Boolean {
-        aclDAO.findAllByClientId(clientId)
+    override fun checkAnonymous(url: String): Boolean {
+        aclDAO.findAll()
                 .firstOrNull { pathMatcher.match(it.url, url) }
                 ?.let {
                     logger.info("匹配到 acl={}", it)
@@ -36,33 +37,39 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
         return DEFAULT_ACL_UNMATCHED_ACTION
     }
 
-    override fun checkPermission(clientId: Long, token: String, url: String): Boolean {
-        val (tokenExist, userInfo) = tokenService.checkToken(clientId, token)
-        if (!tokenExist || userInfo == null) {
+    override fun checkPermission(token: String, url: String): Triple<Boolean, String, UserInfo?> {
+        val (tokenExist, userInfo) = tokenService.checkToken(token)
+        if (!tokenExist) {
             logger.error("tokenExist={}，userInfo={}", tokenExist, userInfo)
-            return false
+            return Triple(false, "Token无效", null)
+        }
+        if (userInfo == null) {
+            logger.error("tokenExist={}，userInfo={}", tokenExist, userInfo)
+            return Triple(false, "用户Id不存在", null)
         }
 
-        userDAO.findById(userInfo.id).orElse(null)?.let {
+        userDAO.findById(userInfo.id!!).orElse(null)?.let {
             logger.info("找到 user")
 
-            val userRoleIds = userRoleDAO.findAllByUserId(userInfo.id).map { it.roleId }
+            val userRoleIds = userRoleDAO.findAllByUserId(userInfo.id!!).map { it.roleId }
             logger.info("用户拥有角色 userRoleIds={}", userRoleIds)
 
-            val aclRoleIds = aclDAO.findAllByClientId(clientId, Sort.by("priority"))
+            val aclDO = aclDAO.findAll(Sort.by("priority"))
                     .firstOrNull { pathMatcher.match(it.url, url) }
-                    ?.roleIds?.split(',')?.filterNot { it.isBlank() }?.map { it.toLong() } ?: emptyList()
+
+            val aclRoleIds = aclDO?.roleIds?.split(',')?.filterNot { it.isBlank() }?.map { it.toLong() } ?: emptyList()
             logger.info("acl 要求角色 aclRoleIds={}", aclRoleIds)
 
-            return if (aclRoleIds.any { userRoleIds.contains(it) }) {
+            if (aclRoleIds.any { userRoleIds.contains(it) }) {
                 logger.info("权限检查通过")
-                true
+                userInfo.affirmative = aclDO!!.affirmative
+                return Triple(true, "权限检查通过", userInfo)
             } else {
                 logger.info("权限检查不通过")
-                false
+                return Triple(false, "权限检查不通过", null)
             }
         }
         logger.error("user 不存在")
-        return false
+        return Triple(false, "user 不存在", null)
     }
 }

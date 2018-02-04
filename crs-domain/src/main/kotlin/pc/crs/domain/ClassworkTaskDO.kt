@@ -1,5 +1,10 @@
 package pc.crs.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedBy
+import org.springframework.data.annotation.LastModifiedDate
 import pc.crs.common.base.domain.BaseDO
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -27,5 +32,12 @@ data class ClassworkTaskDO(
         @Column(nullable = false) var checkType: String = "",
         @Column(nullable = false) var checkTime: LocalDateTime = LocalDateTime.MAX,
         @Column(nullable = false) var checkTeacherId: Long = -1,
-        @Column(nullable = false) var checkTeacherName: String = ""
-) : BaseDO()
+        @Column(nullable = false) var checkTeacherName: String = "",
+
+        @CreatedBy @Column(nullable = false) var creator: String = "",
+        @LastModifiedBy @Column(nullable = false) var modifier: String = "",
+        @CreatedDate @Column(nullable = false) var createTime: LocalDateTime?,
+        @LastModifiedDate @Column(nullable = false) var modifiedTime: LocalDateTime?,
+        @JsonIgnore @Column(nullable = false, columnDefinition = "text") var note: String = "",
+        @JsonIgnore @Version @Column(nullable = false) var version: Long?
+)

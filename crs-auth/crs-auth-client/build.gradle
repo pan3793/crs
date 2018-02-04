@@ -2,12 +2,10 @@ dependencies {
     compile(project(':crs-common'))
     compile(project(':crs-auth:crs-auth-common'))
 
-    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compileOnly 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compileOnly 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
 
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    runtime 'org.springframework.boot:spring-boot-devtools'
-
-    compile "com.alibaba:fastjson"
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin"
+    compileOnly "com.alibaba:fastjson"
+    compileOnly "com.fasterxml.jackson.module:jackson-module-kotlin"
 }

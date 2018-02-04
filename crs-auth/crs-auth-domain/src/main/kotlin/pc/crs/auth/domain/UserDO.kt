@@ -12,6 +12,5 @@ data class UserDO(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false) var loginName: String = "",
-        @JsonIgnore @Column(nullable = false) var password: String = "",
-        @Column(nullable = false) var clientId: Long = -1
+        @JsonIgnore @Column(nullable = false) var password: String = ""
 ) : BaseDO()

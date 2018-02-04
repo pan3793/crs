@@ -17,8 +17,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthInterceptor(@Autowired val authService: AuthService,
-                      @Value("\${crs.auth.clientId}") val clientId: Long) : HandlerInterceptorAdapter() {
+class AuthInterceptor(@Autowired val authService: AuthService) : HandlerInterceptorAdapter() {
 
     companion object {
         const val CRS_TOKEN = "CRS-TOKEN"
@@ -30,7 +29,7 @@ class AuthInterceptor(@Autowired val authService: AuthService,
         val uri: String = request.requestURI
         logger.info("访问路径 uri={}", uri)
 
-        if (authService.checkAnonymous(clientId, uri)) {
+        if (authService.checkAnonymous(uri)) {
             logger.info("uri={} 允许匿名访问", uri)
             AuthContextHolder.setUserInfo(UserInfo(name = "anonymous"))
             return true
@@ -42,23 +41,18 @@ class AuthInterceptor(@Autowired val authService: AuthService,
                 ?: request.getPostJSONObject().getString("token").takeUnless { it.isNullOrBlank() }
 
         token?.let {
-            logger.info("获取到 token={}", token)
-            val (tokenExist, userInfo) = authService.checkToken(clientId, token)
-            if (tokenExist) {
-                logger.info("token={} 验证通过", token)
+            logger.info("获取到 token={}，开始权限检查", token)
+            val (pass, message, userInfo) = authService.checkPermission(token, uri)
+            logger.info(message)
+            if (pass) {
                 userInfo?.let {
                     logger.info("获取到 userInfo={}", userInfo)
                     AuthContextHolder.setUserInfo(userInfo)
                     return true
                 }
-                logger.error("无法获取 userInfo")
-                response.writeJSON(401, failureRestResult("获取用户信息失败"))
-                return false
-            } else {
-                logger.error("token={} 验证失败", token)
-                response.writeJSON(401, failureRestResult("Token无效"))
-                return false
             }
+            response.writeJSON(401, failureRestResult(message))
+            return false
         }
 
         logger.error("获取不到 token")

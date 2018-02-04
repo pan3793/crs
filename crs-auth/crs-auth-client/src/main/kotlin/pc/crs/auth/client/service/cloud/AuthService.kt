@@ -9,18 +9,18 @@ import pc.crs.auth.common.dto.UserInfo
 interface AuthService {
 
     @PostMapping("/checkAnonymous")
-    fun checkAnonymous(@RequestParam clientId: Long, @RequestParam url: String): Boolean
+    fun checkAnonymous(@RequestParam url: String): Boolean
 
     @PostMapping("/checkPermission")
-    fun checkPermission(@RequestParam clientId: Long, @RequestParam url: String, @RequestParam token: String): Boolean
+    fun checkPermission(@RequestParam url: String, @RequestParam token: String): Triple<Boolean, String, UserInfo?>
 
     @PostMapping("/checkToken")
-    fun checkToken(@RequestParam clientId: Long, @RequestParam token: String): Pair<Boolean, UserInfo?>
+    fun checkToken(@RequestParam token: String): Pair<Boolean, UserInfo?>
 
     @PostMapping("/login")
-    fun login(@RequestParam clientId: Long, @RequestParam loginName: String, @RequestParam password: String)
+    fun login(@RequestParam loginName: String, @RequestParam password: String)
             : Pair<Boolean, UserInfo?>
 
     @PostMapping("/logout")
-    fun logout(@RequestParam clientId: Long, @RequestParam token: String)
+    fun logout(@RequestParam token: String)
 }
