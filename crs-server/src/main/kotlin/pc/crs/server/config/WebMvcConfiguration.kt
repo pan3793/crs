@@ -6,10 +6,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import pc.crs.auth.client.interceptor.AuthInterceptor
 
-
 @Configuration
-class WebMvcConfiguration(@Autowired private val authInterceptor: AuthInterceptor) : WebMvcConfigurer {
+class WebMvcConfiguration : WebMvcConfigurer {
+    @Autowired
+    private lateinit var authInterceptor: AuthInterceptor
+
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+//        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
     }
 }

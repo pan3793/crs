@@ -3,11 +3,10 @@ package pc.crs.auth.client.interceptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import pc.crs.auth.client.context.AuthContextHolder
-import pc.crs.auth.client.service.cloud.AuthService
+import pc.crs.auth.client.manager.AuthManager
 import pc.crs.auth.common.dto.UserInfo
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.ext.getPostJSONObject
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthInterceptor(@Autowired val authService: AuthService) : HandlerInterceptorAdapter() {
+class AuthInterceptor(@Autowired val authManager: AuthManager) : HandlerInterceptorAdapter() {
 
     companion object {
         const val CRS_TOKEN = "CRS-TOKEN"
@@ -29,7 +28,7 @@ class AuthInterceptor(@Autowired val authService: AuthService) : HandlerIntercep
         val uri: String = request.requestURI
         logger.info("访问路径 uri={}", uri)
 
-        if (authService.checkAnonymous(uri)) {
+        if (authManager.checkAnonymous(uri)) {
             logger.info("uri={} 允许匿名访问", uri)
             AuthContextHolder.setUserInfo(UserInfo(name = "anonymous"))
             return true
@@ -42,7 +41,7 @@ class AuthInterceptor(@Autowired val authService: AuthService) : HandlerIntercep
 
         token?.let {
             logger.info("获取到 token={}，开始权限检查", token)
-            val (pass, message, userInfo) = authService.checkPermission(token, uri)
+            val (pass, message, userInfo) = authManager.checkPermission(token, uri)
             logger.info(message)
             if (pass) {
                 userInfo?.let {

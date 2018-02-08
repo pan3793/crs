@@ -20,7 +20,7 @@ spring:
       force: true
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/crs_forum?useSSL=false&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/crs_forum?useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 123

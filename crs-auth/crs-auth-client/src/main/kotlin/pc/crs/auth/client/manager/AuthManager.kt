@@ -1,4 +1,4 @@
-package pc.crs.auth.client.service.cloud
+package pc.crs.auth.client.manager
 
 import org.springframework.cloud.netflix.feign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import pc.crs.auth.common.dto.UserInfo
 
 @FeignClient(name = "crs-auth-server", path = "/api/client")
-interface AuthService {
+interface AuthManager {
 
     @PostMapping("/checkAnonymous")
     fun checkAnonymous(@RequestParam url: String): Boolean

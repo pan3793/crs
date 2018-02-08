@@ -13,6 +13,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
 
     compile "com.alibaba:fastjson"
+    compile 'io.springfox:springfox-swagger2'
+    compile 'io.springfox:springfox-swagger-ui'
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
     compile 'mysql:mysql-connector-java'
 }

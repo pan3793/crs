@@ -7,9 +7,11 @@ import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 import javax.persistence.*
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+
 
 @Entity
-@EntityListeners
+@EntityListeners(AuditingEntityListener::class)
 @Table(name = "category")
 data class CategoryDO(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
