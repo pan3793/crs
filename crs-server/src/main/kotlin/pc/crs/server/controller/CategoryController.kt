@@ -34,7 +34,10 @@ class CategoryController(@Autowired private val categoryService: CategoryService
 
     @DeleteMapping("{id}")
     fun delete(@PathVariable id: Long): RestResult {
-        categoryService.deleteById(id)
-        return successRestResult()
+        categoryService.findById(id)?.let {
+            categoryService.deleteById(id)
+            return successRestResult()
+        }
+        return failureRestResult("找不到id=${id}的记录")
     }
 }

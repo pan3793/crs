@@ -4,8 +4,8 @@ import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import pc.crs.common.constant.BASE_VO_READ_IGNORE_FIELD_LIST
 import pc.crs.domain.CategoryDO
 import pc.crs.server.dao.CategoryDAO
 import pc.crs.server.service.CategoryService
@@ -23,8 +23,7 @@ class CategoryServiceImpl(@Autowired private val categoryDAO: CategoryDAO) : Cat
     override fun save(categoryDO: CategoryDO) {
         categoryDO.id?.let { id ->
             categoryDAO.findById(id).orElse(null)?.let {
-                BeanUtils.copyProperties(categoryDO, it,
-                        "id", "creator", "modifier", "createTime", "modifiedTime", "version")
+                BeanUtils.copyProperties(categoryDO, it, *BASE_VO_READ_IGNORE_FIELD_LIST)
                 categoryDAO.save(it)
                 return
             }

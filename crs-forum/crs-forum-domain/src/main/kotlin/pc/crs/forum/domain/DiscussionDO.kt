@@ -8,7 +8,6 @@ import javax.persistence.*
     Index(name = "reply_id_index", columnList = "replyId")
 ])
 data class DiscussionDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var replyId: Long = -1,
         @Column(nullable = false) var userId: Long = -1,
         @Column(nullable = false) var userName: String = "",

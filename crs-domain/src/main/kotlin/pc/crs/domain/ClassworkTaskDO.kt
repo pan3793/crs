@@ -1,14 +1,12 @@
 package pc.crs.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.springframework.data.annotation.CreatedBy
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedBy
-import org.springframework.data.annotation.LastModifiedDate
 import pc.crs.common.base.domain.BaseDO
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Index
+import javax.persistence.Table
 
 @Entity
 @Table(name = "classwork_task", indexes = [
@@ -16,7 +14,6 @@ import javax.persistence.*
     Index(name = "student_id_index", columnList = "studentId")
 ])
 data class ClassworkTaskDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var classworkId: Long = -1,
         @Column(nullable = false) var courseName: String = "",
         @Column(nullable = false) var teacherId: Long = -1,
@@ -32,12 +29,5 @@ data class ClassworkTaskDO(
         @Column(nullable = false) var checkType: String = "",
         @Column(nullable = false) var checkTime: LocalDateTime = LocalDateTime.MAX,
         @Column(nullable = false) var checkTeacherId: Long = -1,
-        @Column(nullable = false) var checkTeacherName: String = "",
-
-        @CreatedBy @Column(nullable = false) var creator: String = "",
-        @LastModifiedBy @Column(nullable = false) var modifier: String = "",
-        @CreatedDate @Column(nullable = false) var createTime: LocalDateTime?,
-        @LastModifiedDate @Column(nullable = false) var modifiedTime: LocalDateTime?,
-        @JsonIgnore @Column(nullable = false, columnDefinition = "text") var note: String = "",
-        @JsonIgnore @Version @Column(nullable = false) var version: Long?
-)
+        @Column(nullable = false) var checkTeacherName: String = ""
+) : BaseDO()

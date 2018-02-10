@@ -8,7 +8,6 @@ import javax.persistence.*
     Index(name = "user_id_index", columnList = "userId")
 ])
 data class UserRoleDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var userId: Long = -1,
         @Column(nullable = false) var roleId: Long = -1
 ) : BaseDO()

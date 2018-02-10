@@ -8,7 +8,6 @@ import javax.persistence.*
     Index(name = "priority_index", columnList = "priority")
 ])
 data class AclDO(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long?,
         @Column(nullable = false) var name: String = "",
         @Column(nullable = false, columnDefinition = "text") var url: String = "",
         @Column(nullable = false) var anonymous: Boolean = false,
