@@ -6,5 +6,5 @@ interface AclService {
 
     fun checkAnonymous(url: String): Boolean
 
-    fun checkPermission(token: String, url: String): Triple<Boolean, String, UserInfo?>
+    fun checkPermission(token: String, url: String): Triple<Int, String, UserInfo?>
 }

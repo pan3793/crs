@@ -12,6 +12,9 @@ import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
 import pc.crs.auth.server.service.AclService
 import pc.crs.auth.server.service.TokenService
+import pc.crs.common.constant.NO_PERMISSION_CODE
+import pc.crs.common.constant.SUCCESS_CODE
+import pc.crs.common.constant.TOKEN_INVALID_CODE
 
 @Service
 class AclServiceImpl(@Autowired val aclDAO: AclDAO,
@@ -37,15 +40,15 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
         return DEFAULT_ACL_UNMATCHED_ACTION
     }
 
-    override fun checkPermission(token: String, url: String): Triple<Boolean, String, UserInfo?> {
+    override fun checkPermission(token: String, url: String): Triple<Int, String, UserInfo?> {
         val (tokenExist, userInfo) = tokenService.checkToken(token)
         if (!tokenExist) {
             logger.error("tokenExist={}，userInfo={}", tokenExist, userInfo)
-            return Triple(false, "Token无效", null)
+            return Triple(TOKEN_INVALID_CODE, "Token无效", null)
         }
         if (userInfo == null) {
             logger.error("tokenExist={}，userInfo={}", tokenExist, userInfo)
-            return Triple(false, "用户Id不存在", null)
+            return Triple(TOKEN_INVALID_CODE, "用户Id不存在", null)
         }
 
         userDAO.findById(userInfo.id!!).orElse(null)?.let {
@@ -63,13 +66,13 @@ class AclServiceImpl(@Autowired val aclDAO: AclDAO,
             if (aclRoleIds.any { userRoleIds.contains(it) }) {
                 logger.info("权限检查通过")
                 userInfo.affirmative = aclDO!!.affirmative
-                return Triple(true, "权限检查通过", userInfo)
+                return Triple(SUCCESS_CODE, "权限检查通过", userInfo)
             } else {
                 logger.info("权限检查不通过")
-                return Triple(false, "权限检查不通过", null)
+                return Triple(NO_PERMISSION_CODE, "权限检查不通过", null)
             }
         }
         logger.error("user 不存在")
-        return Triple(false, "user 不存在", null)
+        return Triple(TOKEN_INVALID_CODE, "user 不存在", null)
     }
 }

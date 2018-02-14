@@ -8,7 +8,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import pc.crs.auth.client.context.AuthContextHolder
 import pc.crs.auth.client.manager.AuthManager
 import pc.crs.auth.common.dto.UserInfo
-import pc.crs.common.bean.failureRestResult
+import pc.crs.common.bean.RestResult
+import pc.crs.common.bean.noPermissionRestResult
+import pc.crs.common.constant.NO_PERMISSION_CODE
+import pc.crs.common.constant.SUCCESS_CODE
+import pc.crs.common.constant.TOKEN_INVALID_CODE
 import pc.crs.common.ext.getPostJSONObject
 import pc.crs.common.ext.writeJSON
 import java.lang.Exception
@@ -41,21 +45,32 @@ class AuthInterceptor(@Autowired val authManager: AuthManager) : HandlerIntercep
 
         token?.let {
             logger.info("获取到 token={}，开始权限检查", token)
-            val (pass, message, userInfo) = authManager.checkPermission(token, uri)
+            val (code, message, userInfo) = authManager.checkPermission(token, uri)
             logger.info(message)
-            if (pass) {
-                userInfo?.let {
-                    logger.info("获取到 userInfo={}", userInfo)
-                    AuthContextHolder.setUserInfo(userInfo)
-                    return true
+            when (code) {
+                SUCCESS_CODE -> {
+                    userInfo?.let {
+                        logger.info("获取到 userInfo={}", userInfo)
+                        AuthContextHolder.setUserInfo(userInfo)
+                        return true
+                    }
+                }
+                TOKEN_INVALID_CODE -> {
+                    response.writeJSON(RestResult(TOKEN_INVALID_CODE, "Token 无效"))
+                    return false
+                }
+                NO_PERMISSION_CODE -> {
+                    response.writeJSON(noPermissionRestResult())
+                    return false
+                }
+                else -> {
+                    return false
                 }
             }
-            response.writeJSON(401, failureRestResult(message))
-            return false
         }
 
         logger.error("获取不到 token")
-        response.writeJSON(401, failureRestResult("Token not found."))
+        response.writeJSON(RestResult(TOKEN_INVALID_CODE, "Token 无效"))
         return false
     }
 
