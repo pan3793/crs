@@ -1,5 +1,5 @@
 server:
-  port: 11005
+  port: 11003
 
 logging:
   file: ${HOME}/logs/${spring.application.name}.log

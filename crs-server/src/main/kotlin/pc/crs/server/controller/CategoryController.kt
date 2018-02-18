@@ -13,12 +13,12 @@ import pc.crs.server.service.CategoryService
 class CategoryController(@Autowired private val categoryService: CategoryService) {
 
     @GetMapping
-    fun get(@RequestParam pageNumber: Int?, @RequestParam pageSize: Int?): RestResult {
-        val categories = categoryService.findAll(pageNumber ?: 1, pageSize ?: 20)
+    fun get(): RestResult {
+        val categories = categoryService.findAll()
         return successRestResult(categories)
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     fun get(@PathVariable id: Long): RestResult {
         categoryService.findById(id)?.let {
             return successRestResult(it)
@@ -32,7 +32,7 @@ class CategoryController(@Autowired private val categoryService: CategoryService
         return successRestResult()
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): RestResult {
         categoryService.findById(id)?.let {
             categoryService.deleteById(id)

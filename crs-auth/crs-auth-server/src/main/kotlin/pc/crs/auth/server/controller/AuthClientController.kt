@@ -20,7 +20,7 @@ class AuthClientController(@Autowired private val aclService: AclService,
     }
 
     @PostMapping("/checkPermission")
-    fun checkPermission(@RequestParam token: String, @RequestParam url: String): Triple<Boolean, String, UserInfo?> {
+    fun checkPermission(@RequestParam token: String, @RequestParam url: String): Triple<Int, String, UserInfo?> {
         return aclService.checkPermission(token, url)
     }
 

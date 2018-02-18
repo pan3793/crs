@@ -2,8 +2,6 @@ package pc.crs.server.service.impl
 
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import pc.crs.common.constant.BASE_VO_READ_IGNORE_FIELD_LIST
 import pc.crs.domain.CategoryDO
@@ -12,8 +10,8 @@ import pc.crs.server.service.CategoryService
 
 @Service
 class CategoryServiceImpl(@Autowired private val categoryDAO: CategoryDAO) : CategoryService {
-    override fun findAll(pageNumber: Int, pageSize: Int): Page<CategoryDO> {
-        return categoryDAO.findAll(PageRequest.of(pageNumber, pageSize))
+    override fun findAll(): Iterable<CategoryDO> {
+        return categoryDAO.findAll()
     }
 
     override fun findById(id: Long): CategoryDO? {

@@ -13,6 +13,7 @@ import javax.persistence.Table
 ])
 data class QuestionDO(
         @Column(nullable = false) var courseId: Long = -1,
+        @Column(nullable = false) var courseName: String = "",
         @Column(nullable = false) var score: BigDecimal = BigDecimal.ZERO,
 
         @Column(nullable = false, columnDefinition = "mediumtext") var ask: String = "{}",
