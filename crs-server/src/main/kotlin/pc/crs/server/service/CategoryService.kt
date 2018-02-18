@@ -1,13 +1,11 @@
 package pc.crs.server.service
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import pc.crs.common.base.service.BaseService
 import pc.crs.domain.CategoryDO
+import pc.crs.server.dao.CategoryDAO
 
-interface CategoryService {
-    fun findAll(): Iterable<CategoryDO>
-
-    fun findById(id: Long): CategoryDO?
-
-    fun save(categoryDO: CategoryDO)
-
-    fun deleteById(id: Long)
-}
+@Service
+class CategoryService(@Autowired override var dao: CategoryDAO)
+    : BaseService<CategoryDO, CategoryDAO>()
