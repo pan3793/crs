@@ -14,6 +14,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class Jackson2ObjectMapperBuilderCustomizerImpl : Jackson2ObjectMapperBuilderCustomizer {
+
     override fun customize(jacksonObjectMapperBuilder: Jackson2ObjectMapperBuilder) {
         jacksonObjectMapperBuilder
                 .serializerByType(LocalDateTime::class.java, LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
