@@ -10,4 +10,4 @@ import pc.crs.server.service.CategoryService
 @RestController
 @RequestMapping("/api/category")
 class CategoryController(@Autowired override var service: CategoryService)
-    : BaseController<CategoryDO, CategoryService>()
+    : BaseController<CategoryDO, CategoryDO, CategoryService>()

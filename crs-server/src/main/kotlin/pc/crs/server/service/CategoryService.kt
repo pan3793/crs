@@ -8,4 +8,4 @@ import pc.crs.server.dao.CategoryDAO
 
 @Service
 class CategoryService(@Autowired override var dao: CategoryDAO)
-    : BaseService<CategoryDO, CategoryDAO>()
+    : BaseService<CategoryDO, CategoryDO, CategoryDAO>()

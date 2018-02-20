@@ -3,8 +3,10 @@ apply plugin: 'org.springframework.boot'
 dependencies {
     compile(project(':crs-auth:crs-auth-domain'))
 	compile(project(':crs-auth:crs-auth-common'))
+	compile(project(':crs-auth:crs-auth-client'))
 
 	compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-redis'

@@ -1,9 +1,9 @@
-package pc.crs.server.config
+package pc.crs.auth.server.config
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import pc.crs.auth.client.interceptor.AuthInterceptor
 
 @Configuration

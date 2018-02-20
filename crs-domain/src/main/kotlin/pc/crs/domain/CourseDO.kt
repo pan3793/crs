@@ -13,7 +13,6 @@ data class CourseDO(
         @Column(nullable = false) var categoryName: String = "",
         @Column(nullable = false) var teacherId: Long = -1,
         @Column(nullable = false) var teacherName: String = "",
-        @Column(nullable = false, columnDefinition = "text") var teacherDescription: String = "",
         @Column(nullable = false, columnDefinition = "text") var description: String = "",
 
         @Basic(fetch = FetchType.LAZY) @Column(nullable = false, columnDefinition = "text")

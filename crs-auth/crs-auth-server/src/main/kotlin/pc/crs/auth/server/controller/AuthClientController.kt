@@ -11,8 +11,8 @@ import pc.crs.auth.server.service.TokenService
 
 @RestController
 @RequestMapping("/api/client")
-class AuthClientController(@Autowired private val aclService: AclService,
-                           @Autowired private val tokenService: TokenService) {
+class AuthClientController(@Autowired val aclService: AclService,
+                           @Autowired val tokenService: TokenService) {
 
     @PostMapping("/checkAnonymous")
     fun checkAnonymous(@RequestParam url: String): Boolean {

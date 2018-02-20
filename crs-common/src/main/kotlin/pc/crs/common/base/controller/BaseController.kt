@@ -8,36 +8,29 @@ import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.bean.successRestResult
 
-abstract class BaseController<DO : BaseDO, S : BaseService<DO, out BaseDAO<DO>>> {
+abstract class BaseController<DTO : Any, DO : BaseDO, out S : BaseService<DTO, DO, BaseDAO<DO>>> {
 
-    open lateinit var service: S
+    abstract val service: S
 
     @GetMapping
-    fun get(): RestResult {
+    open fun get(): RestResult {
         return successRestResult(service.findAll())
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: Long): RestResult {
-        service.findById(id)?.let {
-            return successRestResult(it)
-        }
-        return failureRestResult("找不到id=${id}的记录")
+    open fun get(@PathVariable id: Long): RestResult {
+        return successRestResult(service.findById(id))
     }
 
     @PostMapping
-    fun save(@RequestBody entity: DO): RestResult {
+    open fun save(@RequestBody entity: DTO): RestResult {
         service.save(entity)
         return successRestResult()
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long): RestResult {
-        service.findById(id)?.let {
-            service.deleteById(id)
-            return successRestResult()
-        }
-        return failureRestResult("找不到id=${id}的记录")
+    open fun delete(@PathVariable id: Long): RestResult {
+        service.deleteById(id)
+        return successRestResult()
     }
-
 }

@@ -8,4 +8,4 @@ import pc.crs.server.dao.CourseDAO
 
 @Service
 class CourseService(@Autowired override var dao: CourseDAO)
-    : BaseService<CourseDO, CourseDAO>()
+    : BaseService<CourseDO, CourseDO, CourseDAO>()
