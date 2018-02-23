@@ -9,5 +9,5 @@ import pc.crs.server.service.CourseService
 
 @RestController
 @RequestMapping("/api/course")
-class CourseController(@Autowired override var service: CourseService)
+class CourseController(@Autowired override val service: CourseService)
     : BaseController<CourseDO, CourseDO, CourseService>()

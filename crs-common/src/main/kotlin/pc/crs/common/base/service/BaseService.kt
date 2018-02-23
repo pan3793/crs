@@ -60,7 +60,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
      * 复写该方法自定义校验
      */
     @Throws(ValidateException::class)
-    open fun validateDO(entity: Any) {
+    open fun validateDO(entity: DO) {
     }
 
     /**
