@@ -1,34 +1,33 @@
 package pc.crs.auth.server.service
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.util.PathMatcher
 import pc.crs.auth.common.dto.UserInfo
+import pc.crs.auth.domain.AclDO
 import pc.crs.auth.server.dao.AclDAO
 import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
+import pc.crs.common.base.service.BaseService
 import pc.crs.common.constant.NO_PERMISSION_CODE
 import pc.crs.common.constant.SUCCESS_CODE
 import pc.crs.common.constant.TOKEN_INVALID_CODE
 
 @Service
-class AclService(@Autowired val aclDAO: AclDAO,
+class AclService(@Autowired override val dao: AclDAO,
                  @Autowired val userDAO: UserDAO,
                  @Autowired val userRoleDAO: UserRoleDAO,
                  @Autowired val pathMatcher: PathMatcher,
-                 @Autowired val tokenService: TokenService) {
+                 @Autowired val tokenService: TokenService)
+    : BaseService<AclDO, AclDO, AclDAO>() {
 
     companion object {
         const val DEFAULT_ACL_UNMATCHED_ACTION = false
     }
 
-    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
-
     fun checkAnonymous(url: String): Boolean {
-        aclDAO.findAll()
+        dao.findAll()
                 .firstOrNull { pathMatcher.match(it.url, url) }
                 ?.let {
                     logger.info("匹配到 acl={}", it)
@@ -55,10 +54,10 @@ class AclService(@Autowired val aclDAO: AclDAO,
             val userRoleIds = userRoleDAO.findAllByUserId(userInfo.id!!).map { it.roleId }
             logger.info("用户拥有角色 userRoleIds={}", userRoleIds)
 
-            val aclDO = aclDAO.findAll(Sort.by("priority"))
+            val aclDO = dao.findAll(Sort.by("priority"))
                     .firstOrNull { pathMatcher.match(it.url, url) }
 
-            val aclRoleIds = aclDO?.roleIds?.split(',')?.filterNot { it.isBlank() }?.map { it.toLong() } ?: emptyList()
+            val aclRoleIds = aclDO?.roleIds ?: emptyList()
             logger.info("acl 要求角色 aclRoleIds={}", aclRoleIds)
 
             if (aclRoleIds.any { userRoleIds.contains(it) }) {

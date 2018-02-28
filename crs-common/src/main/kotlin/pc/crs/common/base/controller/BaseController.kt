@@ -1,5 +1,7 @@
 package pc.crs.common.base.controller
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import pc.crs.common.base.dao.BaseDAO
 import pc.crs.common.base.domain.BaseDO
@@ -9,6 +11,8 @@ import pc.crs.common.bean.failureRestResult
 import pc.crs.common.bean.successRestResult
 
 abstract class BaseController<DTO : Any, DO : BaseDO, out S : BaseService<DTO, DO, BaseDAO<DO>>> {
+
+    open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     abstract val service: S
 

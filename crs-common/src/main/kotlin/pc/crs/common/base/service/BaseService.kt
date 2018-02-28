@@ -1,5 +1,7 @@
 package pc.crs.common.base.service
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
@@ -10,6 +12,8 @@ import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.common.exception.ValidateException
 
 abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
+
+    open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     abstract val dao: DAO
 

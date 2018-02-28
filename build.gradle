@@ -1,8 +1,8 @@
 buildscript {
     ext {
         kotlinVersion = '1.2.21'
-        springBootVersion = '2.0.0.RC1'
-        springCloudVersion = 'Finchley.M6'
+        springBootVersion = '2.0.0.RC2'
+        springCloudVersion = 'Finchley.M7'
         fastjsonVersion = '1.2.44'
         mysqlConnectorVersion = '5.1.45'
         swagger2Version = '2.8.0'

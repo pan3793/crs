@@ -11,7 +11,7 @@ import pc.crs.common.bean.IdNameDTO
 
 @RestController
 @RequestMapping("/api/user")
-class UserController(@Autowired override var service: UserService)
+class UserController(@Autowired override val service: UserService)
     : BaseController<UserDO, UserDO, UserService>() {
 
     @GetMapping("idNameList")

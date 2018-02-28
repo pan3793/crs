@@ -2,12 +2,12 @@ package pc.crs.common.convert
 
 import javax.persistence.AttributeConverter
 
-class StringListJsonConverter : AttributeConverter<List<String>, String> {
-    override fun convertToDatabaseColumn(attribute: List<String>): String {
-        return null
+class LongListJsonConverter : AttributeConverter<List<Long>, String> {
+    override fun convertToDatabaseColumn(attribute: List<Long>): String {
+        return attribute.joinToString { it.toString() }
     }
 
-    override fun convertToEntityAttribute(dbData: String): List<String> {
+    override fun convertToEntityAttribute(dbData: String): List<Long> {
         return dbData.split(',').filterNot { it.isBlank() }.map { it.toLong() }
     }
 }

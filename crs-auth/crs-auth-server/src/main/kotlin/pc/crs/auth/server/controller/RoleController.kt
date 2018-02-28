@@ -9,5 +9,5 @@ import pc.crs.common.base.controller.BaseController
 
 @RestController
 @RequestMapping("/api/role")
-class RoleController(@Autowired override var service: RoleService)
+class RoleController(@Autowired override val service: RoleService)
     : BaseController<RoleDO, RoleDO, RoleService>()
