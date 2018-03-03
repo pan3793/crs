@@ -12,7 +12,7 @@ import pc.crs.common.bean.successRestResult
 
 abstract class BaseController<DTO : Any, DO : BaseDO, out S : BaseService<DTO, DO, BaseDAO<DO>>> {
 
-    open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    protected open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     abstract val service: S
 

@@ -13,7 +13,7 @@ import pc.crs.common.exception.ValidateException
 
 abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
 
-    open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    protected open val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     abstract val dao: DAO
 
