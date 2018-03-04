@@ -12,3 +12,7 @@ include ':crs-auth:crs-auth-client'
 include ':crs-forum:crs-forum-common'
 include ':crs-forum:crs-forum-domain'
 include ':crs-forum:crs-forum-server'
+
+include ':crs-file:crs-file-common'
+include ':crs-file:crs-file-domain'
+include ':crs-file:crs-file-server'
