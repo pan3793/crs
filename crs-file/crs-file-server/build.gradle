@@ -4,9 +4,10 @@ dependencies {
     compile(project(':crs-common'))
     compile(project(':crs-file:crs-file-common'))
     compile(project(':crs-file:crs-file-domain'))
+    compile(project(':crs-auth:crs-auth-client'))
 
-//    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-//    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 //    compile 'org.springframework.boot:spring-boot-starter-data-redis'

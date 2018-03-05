@@ -6,6 +6,11 @@ logging:
   level:
     root: info
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:11000/eureka/
+
 spring:
   application:
       name: crs-file-server
