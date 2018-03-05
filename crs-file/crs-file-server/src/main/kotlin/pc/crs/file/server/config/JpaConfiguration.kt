@@ -1,4 +1,4 @@
-package pc.crs.auth.server.config
+package pc.crs.file.server.config
 
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
