@@ -11,7 +11,7 @@ import java.util.*
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware", dateTimeProviderRef = "dateTimeProvider")
-@EntityScan(basePackages = ["pc.crs.auth.domain"])
+@EntityScan(basePackages = ["pc.crs.file.domain"])
 class JpaConfiguration {
     @Bean
     fun auditorAware() = AuditorAware<String> { Optional.of(AuthContextHolder.getUserInfo()?.name ?: "anonymous") }
