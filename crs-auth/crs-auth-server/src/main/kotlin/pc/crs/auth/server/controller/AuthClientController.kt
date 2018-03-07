@@ -5,9 +5,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import pc.crs.auth.common.dto.UserInfo
 import pc.crs.auth.server.service.AclService
 import pc.crs.auth.server.service.TokenService
+import pc.crs.common.bean.RestResult
+import pc.crs.common.bean.successRestResult
 
 @RestController
 @RequestMapping("/api/client")
@@ -15,24 +16,24 @@ class AuthClientController(@Autowired val aclService: AclService,
                            @Autowired val tokenService: TokenService) {
 
     @PostMapping("/checkAnonymous")
-    fun checkAnonymous(@RequestParam url: String): Boolean {
-        return aclService.checkAnonymous(url)
+    fun checkAnonymous(@RequestParam url: String): RestResult {
+        return successRestResult(aclService.checkAnonymous(url))
     }
 
     @PostMapping("/checkPermission")
-    fun checkPermission(@RequestParam token: String, @RequestParam url: String): Triple<Int, String, UserInfo?> {
-        return aclService.checkPermission(token, url)
+    fun checkPermission(@RequestParam token: String, @RequestParam url: String): RestResult {
+        return successRestResult(aclService.checkPermission(token, url))
     }
 
     @PostMapping("/checkToken")
-    fun checkToken(@RequestParam token: String): Pair<Boolean, UserInfo?> {
-        return tokenService.checkToken(token)
+    fun checkToken(@RequestParam token: String): RestResult {
+        return successRestResult(tokenService.checkToken(token))
     }
 
     @PostMapping("/login")
     fun login(@RequestParam loginName: String, @RequestParam password: String)
-            : Pair<Boolean, UserInfo?> {
-        return tokenService.login(loginName, password)
+            : RestResult {
+        return successRestResult(tokenService.login(loginName, password))
     }
 
     @PostMapping("/logout")
