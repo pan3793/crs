@@ -15,7 +15,7 @@ import javax.persistence.Table
     Index(name = "student_id_index", columnList = "studentId")
 ])
 data class ExamTaskDO(
-        @Column(nullable = false) var classworkId: Long = -1,
+        @Column(nullable = false) var examId: Long = -1,
         @Column(nullable = false) var courseName: String = "",
         @Column(nullable = false) var teacherId: Long = -1,
         @Column(nullable = false) var teacherName: String = "",
