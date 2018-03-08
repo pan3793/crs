@@ -37,8 +37,11 @@ class FeignClientsConfigurationImpl(@Autowired val messageConverters: ObjectFact
         override fun decode(response: Response, type: Type): Any {
             val restResult = super.decode(response, RestResult::class.java) as RestResult?
             if (restResult?.code == SUCCESS_CODE) {
-                println(restResult.data.toString())
-                return objectMapper.readValue(restResult.data.toString(), Class.forName(type.toString()))
+                // 虽然这样效率低下，但是暂时找不到更好的办法了
+                return objectMapper.readValue(objectMapper.writeValueAsString(restResult.data),
+                        objectMapper.constructType(type))
+                // FastJson也可以支持泛型嵌套
+//                return JSON.parseObject(objectMapper.writeValueAsString(restResult.data), type)
             } else {
                 logger.error("Feign请求异常，url={}，httpCode={}, reason={}, {}",
                         response.request().url(), response.status(), response.reason(), restResult)
