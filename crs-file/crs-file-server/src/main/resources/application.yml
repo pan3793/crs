@@ -15,6 +15,11 @@ spring:
   application:
       name: crs-file-server
 
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
   http:
     encoding:
       force: true
@@ -39,4 +44,7 @@ spring:
     serialization:
       indentOutput: true
 
+file:
+  basePath: /root/nginx/res
 
+ip: 101.132.159.21

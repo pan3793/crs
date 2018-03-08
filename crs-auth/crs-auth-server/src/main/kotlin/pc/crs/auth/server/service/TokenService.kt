@@ -70,7 +70,7 @@ class TokenService(
     private fun fetchUserInfo(userId: Long): UserInfo? {
         userDAO.findById(userId).orElse(null)?.let {
             logger.info("找到 user={}", it)
-            val roleNames = roleDAO.findAllById(userRoleDAO.findAllByUserId(userId).map { it.roleId }).map { it.name }
+            val roleNames = roleDAO.findAllById(userRoleDAO.findByUserId(userId).map { it.roleId }).map { it.name }
             return UserInfo(
                     id = it.id,
                     name = it.name,

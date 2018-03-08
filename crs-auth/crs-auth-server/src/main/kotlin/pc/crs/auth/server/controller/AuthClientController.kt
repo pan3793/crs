@@ -37,7 +37,8 @@ class AuthClientController(@Autowired val aclService: AclService,
     }
 
     @PostMapping("/logout")
-    fun logout(@RequestParam token: String) {
+    fun logout(@RequestParam token: String): RestResult {
         tokenService.logout(token)
+        return successRestResult()
     }
 }

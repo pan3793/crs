@@ -8,4 +8,6 @@ import pc.crs.common.base.dao.BaseDAO
 interface UserDAO : BaseDAO<UserDO> {
 
     fun findByLoginName(loginName: String): UserDO?
+
+    fun findByIdIn(ids: List<Long>): List<UserDO>
 }

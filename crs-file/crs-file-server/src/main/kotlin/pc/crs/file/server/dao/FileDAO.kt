@@ -1,8 +1,8 @@
-package pc.crs.server.dao
+package pc.crs.file.server.dao
 
 import org.springframework.stereotype.Repository
 import pc.crs.common.base.dao.BaseDAO
-import pc.crs.domain.TeacherDO
+import pc.crs.file.domain.FileDO
 
 @Repository
-interface TeacherDAO : BaseDAO<TeacherDO>
+interface FileDAO : BaseDAO<FileDO>

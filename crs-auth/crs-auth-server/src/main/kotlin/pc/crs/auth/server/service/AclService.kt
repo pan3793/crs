@@ -51,7 +51,7 @@ class AclService(@Autowired override val dao: AclDAO,
         userDAO.findById(userInfo.id!!).orElse(null)?.let {
             logger.info("找到 user")
 
-            val userRoleIds = userRoleDAO.findAllByUserId(userInfo.id!!).map { it.roleId }
+            val userRoleIds = userRoleDAO.findByUserId(userInfo.id!!).map { it.roleId }
             logger.info("用户拥有角色 userRoleIds={}", userRoleIds)
 
             val aclDO = dao.findAll(Sort.by("priority"))

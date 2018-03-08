@@ -5,4 +5,7 @@ import pc.crs.auth.domain.RoleDO
 import pc.crs.common.base.dao.BaseDAO
 
 @Repository
-interface RoleDAO : BaseDAO<RoleDO>
+interface RoleDAO : BaseDAO<RoleDO> {
+
+    fun findByCode(code: String): List<RoleDO>
+}

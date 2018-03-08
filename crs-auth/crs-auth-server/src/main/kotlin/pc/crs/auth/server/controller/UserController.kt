@@ -17,6 +17,16 @@ class UserController(@Autowired override val service: UserService)
 
     @GetMapping("idNameList")
     fun getIdNameList(): RestResult {
-        return successRestResult(service.getIdNameList())
+        return successRestResult(service.fetchIdNameList())
+    }
+
+    @GetMapping("teacherIdNameList")
+    fun getTeacherIdNameList(): RestResult {
+        return successRestResult(service.fetchTeacherIdNameList())
+    }
+
+    @GetMapping("studentIdNameList")
+    fun getStudentIdNameList(): RestResult {
+        return successRestResult(service.fetchStudentIdNameList())
     }
 }

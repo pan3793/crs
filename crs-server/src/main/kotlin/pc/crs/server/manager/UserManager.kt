@@ -8,4 +8,10 @@ import pc.crs.common.bean.IdNameDTO
 interface UserManager {
     @GetMapping("idNameList")
     fun fetchIdNameList(): List<IdNameDTO>
+
+    @GetMapping("teacherIdNameList")
+    fun fetchTeacherIdNameList(): List<IdNameDTO>
+
+    @GetMapping("studentIdNameList")
+    fun fetchStudentIdNameList(): List<IdNameDTO>
 }
