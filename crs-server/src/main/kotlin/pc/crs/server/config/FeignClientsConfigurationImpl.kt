@@ -41,7 +41,7 @@ class FeignClientsConfigurationImpl(@Autowired val messageConverters: ObjectFact
                 return objectMapper.readValue(objectMapper.writeValueAsString(restResult.data),
                         objectMapper.constructType(type))
                 // FastJson也可以支持泛型嵌套
-//                return JSON.parseObject(objectMapper.writeValueAsString(restResult.data), type)
+//                return JSON.parseObject(JSON.toJSONString(restResult.data), type)
             } else {
                 logger.error("Feign请求异常，url={}，httpCode={}, reason={}, {}",
                         response.request().url(), response.status(), response.reason(), restResult)
