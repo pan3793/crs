@@ -11,8 +11,7 @@ class WebMvcConfiguration : WebMvcConfigurer {
     /**
      * 避免IoC循环依赖，不使用构造器注入
      */
-    @Autowired
-    private lateinit var authInterceptor: AuthInterceptor
+    @Autowired lateinit var authInterceptor: AuthInterceptor
 
     override fun addInterceptors(registry: InterceptorRegistry) {
 //        registry.addInterceptor(authInterceptor).addPathPatterns("/**")

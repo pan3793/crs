@@ -34,14 +34,14 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
     }
 
     @Transactional
-    open fun save(dto: DTO) {
+    open fun save(dto: DTO): DTO {
         val entity = convertDTO2DO(dto)
         entity.id?.let { id ->
             dao.findById(id).orElse(null)?.let {
                 BeanUtils.copyProperties(entity, it, *dtoReadOnlyIgnoreFiledList)
                 validateDO(it)
                 dao.save(it)
-                return
+                return convertDO2DTO(it)
             }
             throw RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }
@@ -49,6 +49,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
         BeanUtils.copyProperties(entity, newEntity, *dtoReadOnlyIgnoreFiledList)
         validateDO(newEntity)
         dao.save(newEntity)
+        return convertDO2DTO(newEntity)
     }
 
     @Throws(RecordNotFoundException::class)

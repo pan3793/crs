@@ -45,6 +45,7 @@ spring:
       indentOutput: true
 
 file:
-  basePath: /root/nginx/res
+  basePath: /home/pc/share/nginx/res
 
-ip: 101.132.159.21
+#host: http://101.132.159.21
+host:

@@ -12,8 +12,13 @@ import org.springframework.context.annotation.Configuration
 import pc.crs.common.config.CustomizedResponseEntityDecoder
 
 @Configuration
-class FeignConfiguration(@Autowired val messageConverters: ObjectFactory<HttpMessageConverters>,
-                         @Autowired val objectMapper: ObjectMapper) {
+class FeignConfiguration {
+
+    @Autowired
+    lateinit var messageConverters: ObjectFactory<HttpMessageConverters>
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     @Bean
     fun feignDecoder(): Decoder {

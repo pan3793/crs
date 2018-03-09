@@ -1,6 +1,6 @@
 package pc.crs.file.server.dto
 
-import pc.crs.common.bean.NameUrlDTO
+import pc.crs.file.domain.FileDO
 
-data class UploadFileResultDTO(val successes: List<NameUrlDTO> = emptyList(),
-                               val fails: List<NameUrlDTO> = emptyList())
+data class UploadFileResultDTO(val successes: List<FileDO> = emptyList(),
+                               val fails: List<String> = emptyList())

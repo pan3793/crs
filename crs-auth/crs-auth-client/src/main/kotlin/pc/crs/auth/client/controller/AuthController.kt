@@ -12,7 +12,10 @@ import pc.crs.common.bean.successRestResult
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthController(@Autowired val authManager: AuthManager) {
+class AuthController {
+
+    @Autowired
+    lateinit var authManager: AuthManager
 
     @PostMapping("/login")
     fun login(@RequestParam loginName: String, @RequestParam password: String): RestResult {

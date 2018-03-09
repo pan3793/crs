@@ -1,7 +1,6 @@
 package pc.crs.file.server.controller
 
 import org.slf4j.Logger
-
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pc.crs.common.bean.NameUrlDTO
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.bean.successRestResult
@@ -26,7 +24,7 @@ import java.util.*
 @RequestMapping("/api/file")
 class FileController(@Autowired val fileService: FileService,
                      @Value("\${file.basePath}") val basePath: String,
-                     @Value("\${ip}") val ip: String) {
+                     @Value("\${host}") val host: String) {
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -37,14 +35,15 @@ class FileController(@Autowired val fileService: FileService,
             return failureRestResult("上传文件列表不能为空")
         }
 
-        val uploadSuccessFileNameUrls = arrayListOf<NameUrlDTO>()
-        val uploadFailedFileNameUrls = arrayListOf<NameUrlDTO>()
+        val uploadSuccessFiles = arrayListOf<FileDO>()
+        val uploadFailedFileNames = arrayListOf<String>()
 
         files.forEach { file ->
+            val date = LocalDate.now()
             val uuid = UUID.randomUUID()
             val filename = file.originalFilename ?: "file-$uuid"
             try {
-                val filePath = "$basePath/${LocalDate.now()}/$uuid"
+                val filePath = "$basePath/$date/$uuid"
                 File(filePath).mkdirs()
                 val storeFile = File(filePath, filename)
                 file.transferTo(storeFile)
@@ -57,26 +56,25 @@ class FileController(@Autowired val fileService: FileService,
                     "zip", "rar", "7z" -> "zip"
                     else -> "other"
                 }
-                val url = "http://$ip/res/$uuid/$filename"
-                fileService.save(FileDO(filename, type, url))
-                uploadSuccessFileNameUrls += NameUrlDTO(filename, url)
+                val url = "$host/res/$date/$uuid/$filename"
+                uploadSuccessFiles += fileService.save(FileDO(filename, type, url))
             } catch (e: IOException) {
                 e.printStackTrace()
-                uploadFailedFileNameUrls += NameUrlDTO(filename)
+                uploadFailedFileNames += filename
                 logger.error("文件<{}>存储出错", filename)
             }
         }
-        val uploadFileResultDTO = UploadFileResultDTO(uploadSuccessFileNameUrls, uploadFailedFileNameUrls)
+        val uploadFileResultDTO = UploadFileResultDTO(uploadSuccessFiles, uploadFailedFileNames)
         return when {
-            uploadSuccessFileNameUrls.size == files.size ->
+            uploadSuccessFiles.size == files.size ->
                 successRestResult("共上传${files.size}个文件，全部上传成功", uploadFileResultDTO)
 
-            uploadSuccessFileNameUrls.isEmpty() ->
+            uploadFailedFileNames.isEmpty() ->
                 failureRestResult("共上传${files.size}个文件，全部上传失败", uploadFileResultDTO)
 
             else -> failureRestResult("共上传${files.size}个文件，" +
-                    "${uploadSuccessFileNameUrls.size}个上传成功，" +
-                    "${uploadFailedFileNameUrls.size}个上传失败", uploadFileResultDTO)
+                    "${uploadSuccessFiles.size}个上传成功，" +
+                    "${uploadFailedFileNames.size}个上传失败", uploadFileResultDTO)
         }
     }
 }

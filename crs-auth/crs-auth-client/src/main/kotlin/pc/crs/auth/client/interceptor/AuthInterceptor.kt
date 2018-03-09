@@ -20,11 +20,13 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthInterceptor(@Autowired val authManager: AuthManager) : HandlerInterceptorAdapter() {
+class AuthInterceptor : HandlerInterceptorAdapter() {
 
     companion object {
         const val CRS_TOKEN = "CRS-TOKEN"
     }
+
+    @Autowired lateinit var authManager: AuthManager
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
