@@ -10,13 +10,4 @@ import pc.crs.server.manager.UserManager
 
 @Service
 class CourseService(@Autowired override val dao: CourseDAO)
-    : BaseService<CourseDO, CourseDO, CourseDAO>() {
-
-    @Autowired lateinit var userManager: UserManager
-
-    fun fetchTeacherIdNameList(): List<IdNameDTO> = userManager.fetchTeacherIdNameList()
-//    fun fetchTeacherIdNameList(): List<IdNameDTO> = emptyList()
-
-    fun fetchStudentIdNameList(): List<IdNameDTO> = userManager.fetchStudentIdNameList()
-//    fun fetchStudentIdNameList(): List<IdNameDTO> = emptyList()
-}
+    : BaseService<CourseDO, CourseDO, CourseDAO>()
