@@ -21,7 +21,8 @@ class TokenService(
         @Autowired private val roleDAO: RoleDAO,
         @Autowired private val resDAO: RoleResDAO,
         @Autowired private val roleResDAO: RoleResDAO,
-        @Autowired private val userRoleDAO: UserRoleDAO) {
+        @Autowired private val userRoleDAO: UserRoleDAO,
+        @Autowired private val userService: UserService) {
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -62,8 +63,8 @@ class TokenService(
         tokenDAO.deleteById(token)
     }
 
-    private fun checkPassword(realPassword: String, inputPassword: String): Boolean {
-        return realPassword == inputPassword
+    fun checkPassword(realEncryptedPassword: String, inputPassword: String): Boolean {
+        return realEncryptedPassword == userService.encryptPassword(inputPassword)
     }
 
     // affirmative属性将在checkPermission中设置

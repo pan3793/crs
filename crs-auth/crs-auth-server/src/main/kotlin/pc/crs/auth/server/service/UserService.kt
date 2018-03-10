@@ -1,26 +1,43 @@
 package pc.crs.auth.server.service
 
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pc.crs.auth.domain.UserDO
-import pc.crs.auth.server.dao.UserDAO
+import pc.crs.auth.domain.UserRoleDO
 import pc.crs.auth.server.dao.RoleDAO
+import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
+import pc.crs.auth.server.dto.UserDTO
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.bean.IdNameDTO
-import pc.crs.common.constant.BASE_DTO_READ_IGNORE_FIELD_LIST
+import pc.crs.common.exception.RecordNotFoundException
+import pc.crs.common.exception.ValidateException
 
 @Service
 class UserService(@Autowired override val dao: UserDAO,
                   @Autowired val userRoleDAO: UserRoleDAO,
                   @Autowired val roleDAO: RoleDAO)
-    : BaseService<UserDO, UserDO, UserDAO>() {
-
-    // 屏蔽DTO密码，避免直接修改
-    override val dtoReadOnlyIgnoreFiledList = BASE_DTO_READ_IGNORE_FIELD_LIST + "password"
+    : BaseService<UserDTO, UserDO, UserDAO>() {
 
     fun fetchIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }
+
+    fun resetPassword(id: Long, newPassword: String) {
+        validatePassword(newPassword)
+        dao.findById(id).orElseThrow {
+            RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
+        }.password = encryptPassword(newPassword)
+    }
+
+    @Throws(ValidateException::class)
+    fun validatePassword(password: String) {
+        if (password.isBlank()) throw ValidateException("密码不合法")
+    }
+
+    fun encryptPassword(password: String): String {
+        return password
+    }
 
     @Transactional
     fun fetchTeacherIdNameList(): List<IdNameDTO> {
@@ -40,5 +57,51 @@ class UserService(@Autowired override val dao: UserDAO,
             }
         }
         return emptyList()
+    }
+
+    @Transactional
+    @Throws(RecordNotFoundException::class)
+    override fun save(dto: UserDTO): UserDTO {
+        val entity = convertDTO2DO(dto)
+        entity.id?.let { id ->
+            dao.findById(id).orElseThrow {
+                RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
+            }.let { userDO ->
+                BeanUtils.copyProperties(entity, userDO, *dtoReadOnlyIgnoreFiledList)
+                validateDO(userDO)
+                dao.save(userDO)
+
+                // 修改 user_role
+                val originalRoleIds = userRoleDAO.findByUserId(userDO.id!!).map { it.roleId }
+                val newRoleIds = dto.roleIds
+                val toRemoveRoleIds = originalRoleIds.minus(newRoleIds)
+                val toAddRoleIds = newRoleIds.minus(originalRoleIds)
+
+                if (toRemoveRoleIds.isNotEmpty()) {
+                    userRoleDAO.findByUserIdAndRoleIdIn(userDO.id!!, toRemoveRoleIds).forEach { userRoleDAO.delete(it) }
+                }
+                toAddRoleIds.forEach { userRoleDAO.save(UserRoleDO(userId = userDO.id!!, roleId = it)) }
+
+                return convertDO2DTO(userDO)
+            }
+        }
+        val newEntity = entity.javaClass.newInstance()
+        BeanUtils.copyProperties(entity, newEntity, *dtoReadOnlyIgnoreFiledList)
+        validateDO(newEntity)
+        dao.save(newEntity)
+        return convertDO2DTO(newEntity)
+    }
+
+    override fun convertDO2DTO(entity: UserDO): UserDTO {
+        val dto = UserDTO::class.java.newInstance()
+        BeanUtils.copyProperties(entity, dto)
+        dto.roleIds = userRoleDAO.findByUserId(entity.id!!).map { it.roleId }
+        return dto
+    }
+
+    override fun convertDTO2DO(dto: UserDTO): UserDO {
+        val entity = UserDO::class.java.newInstance()
+        BeanUtils.copyProperties(dto, entity, *dtoReadOnlyIgnoreFiledList)
+        return entity
     }
 }

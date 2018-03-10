@@ -22,11 +22,13 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
      */
     open val dtoReadOnlyIgnoreFiledList = BASE_DTO_READ_IGNORE_FIELD_LIST
 
+    @Transactional
     open fun findAll(): Iterable<DTO> {
         return dao.findAll().map { convertDO2DTO(it) }
     }
 
     @Throws(RecordNotFoundException::class)
+    @Transactional
     open fun findById(id: Long): DTO {
         return convertDO2DTO(dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
@@ -34,16 +36,18 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
     }
 
     @Transactional
+    @Throws(RecordNotFoundException::class)
     open fun save(dto: DTO): DTO {
         val entity = convertDTO2DO(dto)
         entity.id?.let { id ->
-            dao.findById(id).orElse(null)?.let {
+            dao.findById(id).orElseThrow {
+                RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
+            }.let {
                 BeanUtils.copyProperties(entity, it, *dtoReadOnlyIgnoreFiledList)
                 validateDO(it)
                 dao.save(it)
                 return convertDO2DTO(it)
             }
-            throw RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }
         val newEntity = entity.javaClass.newInstance()
         BeanUtils.copyProperties(entity, newEntity, *dtoReadOnlyIgnoreFiledList)

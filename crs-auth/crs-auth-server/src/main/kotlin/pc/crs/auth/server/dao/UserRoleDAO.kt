@@ -10,4 +10,6 @@ interface UserRoleDAO : BaseDAO<UserRoleDO> {
     fun findByUserId(userId: Long): List<UserRoleDO>
 
     fun findByRoleId(roleId: Long): List<UserRoleDO>
+
+    fun findByUserIdAndRoleIdIn(userId: Long, roleIds: List<Long>): List<UserRoleDO>
 }
