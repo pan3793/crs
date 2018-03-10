@@ -29,7 +29,7 @@ class UserController(@Autowired override val service: UserService)
         return successRestResult(service.fetchStudentIdNameList())
     }
 
-    @PostMapping("resetPassword/{id}")
+    @PostMapping("{id}/resetPassword")
     fun resetPassword(@PathVariable id: Long, @RequestParam newPassword: String): RestResult {
         service.resetPassword(id, newPassword)
         return successRestResult()
