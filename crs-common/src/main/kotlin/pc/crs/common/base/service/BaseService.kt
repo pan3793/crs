@@ -39,21 +39,15 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
     @Throws(RecordNotFoundException::class)
     open fun save(dto: DTO): DTO {
         val entity = convertDTO2DO(dto)
-        entity.id?.let { id ->
+        val `do` = entity.id?.let { id ->
             dao.findById(id).orElseThrow {
                 RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
-            }.let {
-                BeanUtils.copyProperties(entity, it, *dtoReadOnlyIgnoreFiledList)
-                validateDO(it)
-                dao.save(it)
-                return convertDO2DTO(it)
             }
-        }
-        val newEntity = entity.javaClass.newInstance()
-        BeanUtils.copyProperties(entity, newEntity, *dtoReadOnlyIgnoreFiledList)
-        validateDO(newEntity)
-        dao.save(newEntity)
-        return convertDO2DTO(newEntity)
+        } ?: entity.javaClass.newInstance()
+        BeanUtils.copyProperties(entity, `do`, *dtoReadOnlyIgnoreFiledList)
+        validateDO(`do`)
+        dao.save(`do`)
+        return convertDO2DTO(`do`)
     }
 
     @Throws(RecordNotFoundException::class)

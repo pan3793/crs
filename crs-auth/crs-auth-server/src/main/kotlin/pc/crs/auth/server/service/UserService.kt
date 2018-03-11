@@ -25,9 +25,10 @@ class UserService(@Autowired override val dao: UserDAO,
 
     fun resetPassword(id: Long, newPassword: String) {
         validatePassword(newPassword)
-        dao.findById(id).orElseThrow {
+        val userDO = dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
-        }.password = encryptPassword(newPassword)
+        }.apply { password = encryptPassword(newPassword) }
+        dao.save(userDO)
     }
 
     @Throws(ValidateException::class)
@@ -63,33 +64,27 @@ class UserService(@Autowired override val dao: UserDAO,
     @Throws(RecordNotFoundException::class)
     override fun save(dto: UserDTO): UserDTO {
         val entity = convertDTO2DO(dto)
-        entity.id?.let { id ->
+        val userDO: UserDO = entity.id?.let { id ->
             dao.findById(id).orElseThrow {
                 RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
-            }.let { userDO ->
-                BeanUtils.copyProperties(entity, userDO, *dtoReadOnlyIgnoreFiledList)
-                validateDO(userDO)
-                dao.save(userDO)
-
-                // 修改 user_role
-                val originalRoleIds = userRoleDAO.findByUserId(userDO.id!!).map { it.roleId }
-                val newRoleIds = dto.roleIds
-                val toRemoveRoleIds = originalRoleIds.minus(newRoleIds)
-                val toAddRoleIds = newRoleIds.minus(originalRoleIds)
-
-                if (toRemoveRoleIds.isNotEmpty()) {
-                    userRoleDAO.findByUserIdAndRoleIdIn(userDO.id!!, toRemoveRoleIds).forEach { userRoleDAO.delete(it) }
-                }
-                toAddRoleIds.forEach { userRoleDAO.save(UserRoleDO(userId = userDO.id!!, roleId = it)) }
-
-                return convertDO2DTO(userDO)
             }
+        } ?: entity.javaClass.newInstance()
+        BeanUtils.copyProperties(entity, userDO, *dtoReadOnlyIgnoreFiledList)
+        validateDO(userDO)
+        dao.save(userDO)
+
+        // 修改 user_role
+        val originalRoleIds = userRoleDAO.findByUserId(userDO.id!!).map { it.roleId }
+        val newRoleIds = dto.roleIds
+        val toRemoveRoleIds = originalRoleIds.minus(newRoleIds)
+        val toAddRoleIds = newRoleIds.minus(originalRoleIds)
+
+        if (toRemoveRoleIds.isNotEmpty()) {
+            userRoleDAO.findByUserIdAndRoleIdIn(userDO.id!!, toRemoveRoleIds).forEach { userRoleDAO.delete(it) }
         }
-        val newEntity = entity.javaClass.newInstance()
-        BeanUtils.copyProperties(entity, newEntity, *dtoReadOnlyIgnoreFiledList)
-        validateDO(newEntity)
-        dao.save(newEntity)
-        return convertDO2DTO(newEntity)
+        toAddRoleIds.forEach { userRoleDAO.save(UserRoleDO(userId = userDO.id!!, roleId = it)) }
+
+        return convertDO2DTO(userDO)
     }
 
     override fun convertDO2DTO(entity: UserDO): UserDTO {
