@@ -54,6 +54,7 @@ class FileController(@Autowired val fileService: FileService,
                     "ppt", "pptx" -> "ppt"
                     "pdf" -> "pdf"
                     "zip", "rar", "7z" -> "zip"
+                    "mp4" -> "video"
                     else -> "other"
                 }
                 val url = "$host/res/$date/$uuid/$filename"
