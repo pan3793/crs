@@ -54,6 +54,7 @@ class FileController(@Autowired val fileService: FileService,
                     "ppt", "pptx" -> "ppt"
                     "pdf" -> "pdf"
                     "zip", "rar", "7z" -> "zip"
+                    "jpeg", "jpg", "png" -> "image"
                     "mp4" -> "video"
                     else -> "other"
                 }
