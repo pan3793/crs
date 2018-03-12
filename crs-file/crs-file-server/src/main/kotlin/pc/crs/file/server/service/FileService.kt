@@ -7,5 +7,5 @@ import pc.crs.file.domain.FileDO
 import pc.crs.file.server.dao.FileDAO
 
 @Service
-class FileService(@Autowired override var dao: FileDAO)
+class FileService(@Autowired override val dao: FileDAO)
     : BaseService<FileDO, FileDO, FileDAO>()
