@@ -7,4 +7,5 @@ import pc.crs.common.base.dao.BaseDAO
 @Repository
 interface AclDAO : BaseDAO<AclDO> {
 
+    fun findAllByOrderByPriority() : List<AclDO>
 }

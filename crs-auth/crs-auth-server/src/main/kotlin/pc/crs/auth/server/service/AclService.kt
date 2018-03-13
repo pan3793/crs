@@ -26,6 +26,10 @@ class AclService(@Autowired override val dao: AclDAO,
         const val DEFAULT_ACL_UNMATCHED_ACTION = false
     }
 
+    override fun findAll(): Iterable<AclDO> {
+        return dao.findAllByOrderByPriority().map { convertDO2DTO(it) }
+    }
+
     fun checkAnonymous(url: String): Boolean {
         dao.findAll()
                 .firstOrNull { pathMatcher.match(it.url, url) }
