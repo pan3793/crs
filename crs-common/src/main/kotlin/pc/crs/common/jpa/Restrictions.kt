@@ -65,5 +65,3 @@ fun <T> nin(fieldName: String, value: Collection<*>?): SimpleExpression<T>? {
     }
     return SimpleExpression(fieldName, value, NIN)
 }
-
-

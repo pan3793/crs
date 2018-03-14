@@ -1,5 +1,6 @@
 package pc.crs.common.base.service
 
+import com.alibaba.fastjson.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional
 import pc.crs.common.base.dao.BaseDAO
 import pc.crs.common.base.domain.BaseDO
 import pc.crs.common.constant.BASE_DTO_READ_IGNORE_FIELD_LIST
+import pc.crs.common.constant.DEFAULT_PAGE_NUM
+import pc.crs.common.constant.DEFAULT_PAGE_SIZE
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.common.exception.ValidateException
 
@@ -22,8 +25,16 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
      */
     open val dtoReadOnlyIgnoreFiledList = BASE_DTO_READ_IGNORE_FIELD_LIST
 
+    open val defaultPageNum = DEFAULT_PAGE_NUM
+    open val defaultPageSize = DEFAULT_PAGE_SIZE
+
     @Transactional
     open fun findAll(): Iterable<DTO> {
+        return dao.findAll().map { convertDO2DTO(it) }
+    }
+
+    open fun query(jsonObject: JSONObject): Iterable<DTO> {
+        // TODO 通用动态查询
         return dao.findAll().map { convertDO2DTO(it) }
     }
 
