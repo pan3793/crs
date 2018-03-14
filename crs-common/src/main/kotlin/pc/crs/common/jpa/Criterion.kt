@@ -7,7 +7,7 @@ import javax.persistence.criteria.Root
 
 interface Criterion<T> {
     enum class Operator {
-        EQ, NE, LIKE, GT, LT, GTE, LTE, AND, OR, INN, IN
+        EQ, NEQ, LIKE, GT, LT, GTE, LTE, AND, OR, IN, NIN
     }
 
     fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate
