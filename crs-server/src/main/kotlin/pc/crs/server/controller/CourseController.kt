@@ -13,6 +13,11 @@ import pc.crs.server.service.CourseService
 class CourseController(@Autowired override val service: CourseService)
     : BaseController<CourseDO, CourseDO, CourseService>() {
 
+    @GetMapping("allWithCardName")
+    fun findAllWithCardName(): RestResult {
+        return successRestResult(service.findAllWithCardName())
+    }
+
     @PostMapping("{id}/bindImage")
     fun bindImage(@PathVariable id: Long, @RequestParam imageUrl: String): RestResult {
         service.bindImage(id, imageUrl)
@@ -22,6 +27,18 @@ class CourseController(@Autowired override val service: CourseService)
     @PostMapping("{id}/removeImage")
     fun removeImage(@PathVariable id: Long): RestResult {
         service.removeImage(id)
+        return successRestResult()
+    }
+
+    @PostMapping("{id}/addCard")
+    fun addCard(@PathVariable id: Long, @RequestParam cardId: Long): RestResult {
+        service.addCard(id, cardId)
+        return successRestResult()
+    }
+
+    @PostMapping("{id}/removeCard")
+    fun removeCard(@PathVariable id: Long, @RequestParam cardId: Long): RestResult {
+        service.removeCard(id, cardId)
         return successRestResult()
     }
 }

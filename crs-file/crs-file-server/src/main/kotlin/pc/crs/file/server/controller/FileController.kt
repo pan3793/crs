@@ -1,14 +1,10 @@
 package pc.crs.file.server.controller
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import pc.crs.common.base.controller.BaseController
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.failureRestResult
 import pc.crs.common.bean.successRestResult
@@ -22,11 +18,15 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/file")
-class FileController(@Autowired val fileService: FileService,
+class FileController(@Autowired override val service: FileService,
                      @Value("\${file.basePath}") val basePath: String,
-                     @Value("\${host}") val host: String) {
+                     @Value("\${host}") val host: String)
+    : BaseController<FileDO, FileDO, FileService>() {
 
-    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    @PostMapping
+    fun getByIdList(@RequestBody ids: List<Long>): RestResult {
+        return successRestResult(service.findAllByIdIn(ids))
+    }
 
     @PostMapping("upload")
     fun upload(@RequestParam("files") files: Array<MultipartFile>): RestResult {
@@ -54,12 +54,12 @@ class FileController(@Autowired val fileService: FileService,
                     "ppt", "pptx" -> "ppt"
                     "pdf" -> "pdf"
                     "zip", "rar", "7z" -> "zip"
-                    "jpeg", "jpg", "png" -> "image"
+                    "gif", "jpeg", "jpg", "png", "svg" -> "image"
                     "mp4" -> "video"
                     else -> "other"
                 }
                 val url = "$host/res/$date/$uuid/$filename"
-                uploadSuccessFiles += fileService.save(FileDO(filename, type, url))
+                uploadSuccessFiles += service.save(FileDO(filename, type, url))
             } catch (e: IOException) {
                 e.printStackTrace()
                 uploadFailedFileNames += filename

@@ -10,7 +10,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "card")
 data class CardDO(
-        @Column(nullable = false) var title: String = "",
+        @Column(nullable = false) var name: String = "",
         @Column(nullable = false, columnDefinition = "text") var content: String = "",
 
         @Convert(converter = LongListJsonConverter::class) @Column(nullable = false)

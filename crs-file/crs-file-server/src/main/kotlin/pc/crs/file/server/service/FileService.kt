@@ -8,4 +8,9 @@ import pc.crs.file.server.dao.FileDAO
 
 @Service
 class FileService(@Autowired override val dao: FileDAO)
-    : BaseService<FileDO, FileDO, FileDAO>()
+    : BaseService<FileDO, FileDO, FileDAO>() {
+
+    fun findAllByIdIn(ids: List<Long>): List<FileDO> {
+        return dao.findAllByIdIn(ids)
+    }
+}

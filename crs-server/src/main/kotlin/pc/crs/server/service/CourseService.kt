@@ -1,15 +1,35 @@
 package pc.crs.server.service
 
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
+import pc.crs.server.dao.CardDAO
 import pc.crs.server.dao.CourseDAO
+import pc.crs.server.dto.CourseDTOWithCardName
 
 @Service
-class CourseService(@Autowired override val dao: CourseDAO)
+class CourseService(@Autowired override val dao: CourseDAO,
+                    @Autowired val cardDAO: CardDAO)
     : BaseService<CourseDO, CourseDO, CourseDAO>() {
+
+    fun findAllWithCardName(): Iterable<CourseDTOWithCardName> {
+        val courseDOs = dao.findAll()
+        val cardIdNameMap = cardDAO.findAllByIdIn(courseDOs.flatMap { it.cardIds }.distinct())
+                .associate { it.id to it.name }
+
+        return courseDOs.map { courseDO ->
+            val dto = CourseDTOWithCardName()
+            BeanUtils.copyProperties(courseDO, dto)
+            dto.cards.forEach {
+                it.id = courseDO.id
+                it.name = cardIdNameMap.getOrDefault(courseDO.id, "")
+            }
+            dto
+        }
+    }
 
     fun bindImage(id: Long, imageUrl: String) {
         validateImage(imageUrl)
@@ -27,6 +47,18 @@ class CourseService(@Autowired override val dao: CourseDAO)
         val courseDO = dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }.apply { this.imageUrl = "" }
+        dao.save(courseDO)
+    }
+
+    fun addCard(id: Long, cardId: Long) {
+        val courseDO = findById(id)
+        courseDO.cardIds += cardId
+        dao.save(courseDO)
+    }
+
+    fun removeCard(id: Long, cardId: Long) {
+        val courseDO = findById(id)
+        courseDO.cardIds -= cardId
         dao.save(courseDO)
     }
 }
