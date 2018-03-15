@@ -79,4 +79,25 @@ subprojects {
     }
 }
 
+task clean << {
+    println '项目清理完成！'
+}
 
+task pkg << {
+    println '项目打包完成！'
+}
+
+clean.dependsOn ':crs-eureka-server:clean'
+clean.dependsOn ':crs-auth:crs-auth-server:clean'
+clean.dependsOn ':crs-file:crs-file-server:clean'
+clean.dependsOn ':crs-forum:crs-forum-server:clean'
+clean.dependsOn ':crs-server:clean'
+
+pkg.dependsOn ':crs-eureka-server:bootWar'
+pkg.dependsOn ':crs-auth:crs-auth-server:bootWar'
+pkg.dependsOn ':crs-file:crs-file-server:bootWar'
+pkg.dependsOn ':crs-forum:crs-forum-server:bootWar'
+pkg.dependsOn ':crs-server:bootWar'
+
+pkg.dependsOn 'clean'
+pkg.shouldRunAfter 'clean'
