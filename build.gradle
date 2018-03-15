@@ -3,7 +3,7 @@ buildscript {
         kotlinVersion = '1.2.30'
         springBootVersion = '2.0.0.RELEASE'
         springCloudVersion = 'Finchley.M8'
-        fastjsonVersion = '1.2.44'
+        fastjsonVersion = '1.2.47'
         mysqlConnectorVersion = '5.1.45'
         swagger2Version = '2.8.0'
     }
