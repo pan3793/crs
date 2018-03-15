@@ -23,7 +23,7 @@ class FileController(@Autowired override val service: FileService,
                      @Value("\${host}") val host: String)
     : BaseController<FileDO, FileDO, FileService>() {
 
-    @PostMapping
+    @PostMapping("queryByIds")
     fun getByIdList(@RequestBody ids: List<Long>): RestResult {
         return successRestResult(service.findAllByIdIn(ids))
     }
