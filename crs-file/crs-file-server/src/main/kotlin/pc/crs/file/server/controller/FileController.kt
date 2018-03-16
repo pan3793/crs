@@ -1,5 +1,7 @@
 package pc.crs.file.server.controller
 
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.TypeReference
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
@@ -24,7 +26,8 @@ class FileController(@Autowired override val service: FileService,
     : BaseController<FileDO, FileDO, FileService>() {
 
     @PostMapping("queryByIds")
-    fun getByIdList(@RequestBody ids: List<Long>): RestResult {
+    fun getByIdList(@RequestBody json: String): RestResult {
+        val ids = JSON.parseObject<List<Long>>(json, object : TypeReference<List<Long>>() {})
         return successRestResult(service.findAllByIdIn(ids))
     }
 

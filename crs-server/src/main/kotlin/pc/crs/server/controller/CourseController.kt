@@ -30,9 +30,9 @@ class CourseController(@Autowired override val service: CourseService)
         return successRestResult()
     }
 
-    @PostMapping("{id}/addCard")
-    fun addCard(@PathVariable id: Long, @RequestParam cardId: Long): RestResult {
-        service.addCard(id, cardId)
+    @PostMapping("{id}/bindCard")
+    fun bindCard(@PathVariable id: Long, @RequestParam cardId: Long): RestResult {
+        service.bindCard(id, cardId)
         return successRestResult()
     }
 

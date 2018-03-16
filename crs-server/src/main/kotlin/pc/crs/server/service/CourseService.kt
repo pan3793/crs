@@ -23,9 +23,8 @@ class CourseService(@Autowired override val dao: CourseDAO,
         return courseDOs.map { courseDO ->
             val dto = CourseDTOWithCardName()
             BeanUtils.copyProperties(courseDO, dto)
-            dto.cards.forEach {
-                it.id = courseDO.id
-                it.name = cardIdNameMap.getOrDefault(courseDO.id, "")
+            courseDO.cardIds.forEach { cardId ->
+                dto.cards += CourseDTOWithCardName.Card(cardId, cardIdNameMap.getOrDefault(cardId, ""))
             }
             dto
         }
@@ -50,9 +49,10 @@ class CourseService(@Autowired override val dao: CourseDAO,
         dao.save(courseDO)
     }
 
-    fun addCard(id: Long, cardId: Long) {
+    fun bindCard(id: Long, cardId: Long) {
         val courseDO = findById(id)
-        courseDO.cardIds += cardId
+        if (!courseDO.cardIds.contains(cardId))
+            courseDO.cardIds += cardId
         dao.save(courseDO)
     }
 

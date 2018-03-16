@@ -35,8 +35,7 @@ abstract class BaseController<DTO : Any, DO : BaseDO, out S : BaseService<DTO, D
 
     @PostMapping
     open fun save(@RequestBody entity: DTO): RestResult {
-        service.save(entity)
-        return successRestResult()
+        return successRestResult(service.save(entity))
     }
 
     @DeleteMapping("/{id}")
