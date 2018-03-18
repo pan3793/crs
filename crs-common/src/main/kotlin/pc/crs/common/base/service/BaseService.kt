@@ -75,43 +75,35 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
                 NEQ.toString() -> criteria.add(neq(queryMetas[1], jsonObject[queryString]))
                 LIKE.toString() -> criteria.add(like(queryMetas[1], jsonObject.getString(queryString)))
                 GT.toString() -> {
-                    if (jsonObject.containsKey(queryString)) {
-                        if (queryMetas[1].contains("date", true)
-                                || queryMetas[1].contains("time", true)) {
-                            criteria.add(gt(queryMetas[1], jsonObject.getDate(queryString).toLocalDateTime()))
-                        } else {
-                            criteria.add(gt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                        }
+                    if (queryMetas[1].contains("date", true)
+                            || queryMetas[1].contains("time", true)) {
+                        criteria.add(gt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                    } else {
+                        criteria.add(gt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
                     }
                 }
                 LT.toString() -> {
-                    if (jsonObject.containsKey(queryString)) {
-                        if (queryMetas[1].contains("date", true)
-                                || queryMetas[1].contains("time", true)) {
-                            criteria.add(lt(queryMetas[1], jsonObject.getDate(queryString).toLocalDateTime()))
-                        } else {
-                            criteria.add(lt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                        }
+                    if (queryMetas[1].contains("date", true)
+                            || queryMetas[1].contains("time", true)) {
+                        criteria.add(lt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                    } else {
+                        criteria.add(lt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
                     }
                 }
                 GTE.toString() -> {
-                    if (jsonObject.containsKey(queryString)) {
-                        if (queryMetas[1].contains("date", true)
-                                || queryMetas[1].contains("time", true)) {
-                            criteria.add(gte(queryMetas[1], jsonObject.getDate(queryString).toLocalDateTime()))
-                        } else {
-                            criteria.add(gte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                        }
+                    if (queryMetas[1].contains("date", true)
+                            || queryMetas[1].contains("time", true)) {
+                        criteria.add(gte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                    } else {
+                        criteria.add(gte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
                     }
                 }
                 LTE.toString() -> {
-                    if (jsonObject.containsKey(queryString)) {
-                        if (queryMetas[1].contains("date", true)
-                                || queryMetas[1].contains("time", true)) {
-                            criteria.add(lte(queryMetas[1], jsonObject.getDate(queryString).toLocalDateTime()))
-                        } else {
-                            criteria.add(lte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                        }
+                    if (queryMetas[1].contains("date", true)
+                            || queryMetas[1].contains("time", true)) {
+                        criteria.add(lte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                    } else {
+                        criteria.add(lte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
                     }
                 }
                 IN.toString() -> criteria.add(`in`(queryMetas[1], jsonObject.getJSONArray(queryString)))
