@@ -6,7 +6,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.transaction.annotation.Transactional
 import pc.crs.common.base.dao.BaseDAO
@@ -47,7 +49,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
     }
 
     @Throws(CriterionException::class)
-    open fun query(jsonObject: JSONObject): Iterable<DTO> {
+    open fun query(jsonObject: JSONObject): Page<DTO> {
         val illegalQueryConditions = jsonObject.keys - allowedQueryConditions
         if (illegalQueryConditions.isNotEmpty()) {
             logger.error("检测到非法查询参数{}", JSON.toJSONString(illegalQueryConditions))
@@ -147,8 +149,8 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
         }
         val page = PageRequest.of(pageNum, pageSize,
                 Sort.by(orderAndPriorities.apply { sortBy { (_, priority) -> priority } }.map { (order, _) -> order }))
-        val findAll = if (pageDisable) dao.findAll(criteria) else dao.findAll(criteria, page)
-        return findAll.map { convertDO2DTO(it) }
+        val coursesPage = if (pageDisable) dao.findAll(criteria, Pageable.unpaged()) else dao.findAll(criteria, page)
+        return coursesPage.map { convertDO2DTO(it) }
     }
 
     @Throws(RecordNotFoundException::class)
