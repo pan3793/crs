@@ -17,7 +17,7 @@ val BASE_ALLOWED_QUERY_CONDITION_LIST = listOf(
         "EQ_creator",
         "GT_createTime", "GTE_createTime", "LT_createTime", "LTE_createTime",
         "O_createTime", "O_createTime_ASC", "O_createTime_DESC",
-        "P_NUM", "P_SIZE"
+        "P_NUM", "P_SIZE", "P_DISABLE"
 )
 
 /**

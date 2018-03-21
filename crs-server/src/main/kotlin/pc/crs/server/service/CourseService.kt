@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
+import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
 import pc.crs.server.dao.CardDAO
@@ -14,6 +15,14 @@ import pc.crs.server.dto.CourseDTOWithCardName
 class CourseService(@Autowired override val dao: CourseDAO,
                     @Autowired val cardDAO: CardDAO)
     : BaseService<CourseDO, CourseDO, CourseDAO>() {
+
+    override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
+            "LIKE_name",
+            "EQ_categoryId", "IN_categoryId",
+            "EQ_categoryName", "LIKE_categoryName",
+            "EQ_teacherId", "IN_teacherId",
+            "EQ_teacherName", "LIKE_teacherName"
+    )
 
     fun findAllWithCardName(): Iterable<CourseDTOWithCardName> {
         val courseDOs = dao.findAll()

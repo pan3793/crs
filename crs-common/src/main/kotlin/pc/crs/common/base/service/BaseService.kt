@@ -6,7 +6,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.transaction.annotation.Transactional
@@ -48,7 +47,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
     }
 
     @Throws(CriterionException::class)
-    open fun query(jsonObject: JSONObject): Page<DTO> {
+    open fun query(jsonObject: JSONObject): Iterable<DTO> {
         val illegalQueryConditions = jsonObject.keys - allowedQueryConditions
         if (illegalQueryConditions.isNotEmpty()) {
             logger.error("检测到非法查询参数{}", JSON.toJSONString(illegalQueryConditions))
@@ -56,12 +55,14 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
         }
         var pageNum = defaultPageNum
         var pageSize = defaultPageSize
+        var pageDisable = false
         val criteria = Criteria<DO>()
         val orderAndPriorities = mutableListOf<Pair<Sort.Order, Int>>()
         allowedQueryConditions.forEach { queryString ->
             when (queryString) {
                 "P_NUM" -> pageNum = jsonObject.getInteger(queryString) ?: defaultPageNum
                 "P_SIZE" -> pageSize = jsonObject.getInteger(queryString) ?: defaultPageSize
+                "P_DISABLE" -> pageDisable = jsonObject.getBoolean(queryString) ?: false
             }
 
             val queryMetas = queryString.split('_').filterNot { it.isBlank() }
@@ -146,7 +147,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
         }
         val page = PageRequest.of(pageNum, pageSize,
                 Sort.by(orderAndPriorities.apply { sortBy { (_, priority) -> priority } }.map { (order, _) -> order }))
-        val findAll = dao.findAll(criteria, page)
+        val findAll = if (pageDisable) dao.findAll(criteria) else dao.findAll(criteria, page)
         return findAll.map { convertDO2DTO(it) }
     }
 
