@@ -6,6 +6,7 @@ buildscript {
         fastjsonVersion = '1.2.47'
         mysqlConnectorVersion = '5.1.45'
         swagger2Version = '2.8.0'
+        hutoolVersion = '4.0.8'
     }
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -34,6 +35,7 @@ allprojects {
             force "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
             force "io.springfox:springfox-swagger2:${swagger2Version}"
             force "io.springfox:springfox-swagger-ui:${swagger2Version}"
+            force "cn.hutool:hutool-all:${hutoolVersion}"
         }
     }
 
