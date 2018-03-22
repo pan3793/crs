@@ -145,6 +145,10 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
 //                    }
 //                    // TODO
 //                }
+                else -> {
+                    logger.error("查询条件{}定义错误", queryString)
+                    throw CriterionException("查询条件${queryString}定义错误")
+                }
             }
         }
         val page = PageRequest.of(pageNum, pageSize,
