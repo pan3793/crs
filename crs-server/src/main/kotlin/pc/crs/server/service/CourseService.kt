@@ -2,6 +2,9 @@ package pc.crs.server.service
 
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.getBean
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
@@ -17,9 +20,19 @@ import pc.crs.server.manager.FileManager
 @Service
 class CourseService(@Autowired override val dao: CourseDAO,
                     @Autowired val cardDAO: CardDAO,
-                    @Autowired val categoryService: CategoryService,
-                    @Autowired val fileManager: FileManager)
-    : BaseService<CourseDO, CourseDO, CourseDAO>() {
+                    @Autowired val categoryService: CategoryService)
+    : BaseService<CourseDO, CourseDO, CourseDAO>(), ApplicationContextAware {
+
+    // 暂时绕开当前版本 Feign Bug
+    lateinit var appCtx: ApplicationContext
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        appCtx = applicationContext
+    }
+
+    val fileManager: FileManager by lazy {
+        appCtx.getBean<FileManager>(FileManager::javaClass)
+    }
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
             "LIKE_name",
