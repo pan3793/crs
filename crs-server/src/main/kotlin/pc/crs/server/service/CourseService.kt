@@ -9,11 +9,13 @@ import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
 import pc.crs.server.dao.CardDAO
 import pc.crs.server.dao.CourseDAO
-import pc.crs.server.dto.CourseDTOWithCardName
+import pc.crs.server.dto.CourseWithCardNameDTO
+import pc.crs.server.dto.RecommendedCoursesDTO
 
 @Service
 class CourseService(@Autowired override val dao: CourseDAO,
-                    @Autowired val cardDAO: CardDAO)
+                    @Autowired val cardDAO: CardDAO,
+                    @Autowired val categoryService: CategoryService)
     : BaseService<CourseDO, CourseDO, CourseDAO>() {
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
@@ -24,23 +26,23 @@ class CourseService(@Autowired override val dao: CourseDAO,
             "EQ_teacherName", "LIKE_teacherName"
     )
 
-    fun findRecommended(categoryId: Long?): List<CourseDO> {
-        categoryId?.let {
-            return dao.findAllByCategoryIdAndOrderByModifiedTimeLimit(categoryId, 4)
-        }
-        return dao.findAllByOrderByModifiedTimeLimit(5)
-    }
+    fun findRecommended(): RecommendedCoursesDTO =
+            RecommendedCoursesDTO(all = dao.findAllByOrderByModifiedTimeLimit(5),
+                    categories = categoryService.fetchIdNameList().map { (id, name) ->
+                        RecommendedCoursesDTO.CategoryWithRecommendedCourse(id = id, name = name,
+                                courses = dao.findAllByCategoryIdAndOrderByModifiedTimeLimit(id, 4))
+                    })
 
-    fun findAllWithCardName(): Iterable<CourseDTOWithCardName> {
+    fun findAllWithCardName(): Iterable<CourseWithCardNameDTO> {
         val courseDOs = dao.findAll()
         val cardIdNameMap = cardDAO.findAllByIdIn(courseDOs.flatMap { it.cardIds }.distinct())
                 .associate { it.id to it.name }
 
         return courseDOs.map { courseDO ->
-            val dto = CourseDTOWithCardName()
+            val dto = CourseWithCardNameDTO()
             BeanUtils.copyProperties(courseDO, dto)
             courseDO.cardIds.forEach { cardId ->
-                dto.cards += CourseDTOWithCardName.Card(cardId, cardIdNameMap.getOrDefault(cardId, ""))
+                dto.cards += CourseWithCardNameDTO.Card(cardId, cardIdNameMap.getOrDefault(cardId, ""))
             }
             dto
         }

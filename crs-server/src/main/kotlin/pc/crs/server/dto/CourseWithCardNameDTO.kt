@@ -2,7 +2,7 @@ package pc.crs.server.dto
 
 import java.time.LocalDateTime
 
-data class CourseDTOWithCardName(var id: Long? = null,
+data class CourseWithCardNameDTO(var id: Long? = null,
                                  var name: String = "",
                                  var categoryId: Long = -1,
                                  var categoryName: String = "",

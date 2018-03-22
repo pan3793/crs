@@ -14,8 +14,8 @@ class CourseController(@Autowired override val service: CourseService)
     : BaseController<CourseDO, CourseDO, CourseService>() {
 
     @GetMapping("recommended")
-    fun findRecommended(@RequestParam categoryId: Long?): RestResult {
-        return successRestResult(service.findRecommended(categoryId))
+    fun findRecommended(): RestResult {
+        return successRestResult(service.findRecommended())
     }
 
     @GetMapping("allWithCardName")

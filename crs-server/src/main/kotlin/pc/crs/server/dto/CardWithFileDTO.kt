@@ -2,7 +2,7 @@ package pc.crs.server.dto
 
 import java.time.LocalDateTime
 
-data class CardDTOWithFile(var id: Long? = null,
+data class CardWithFileDTO(var id: Long? = null,
                            var name: String = "",
                            var content: String = "",
                            var files: List<File> = emptyList(),
