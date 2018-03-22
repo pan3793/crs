@@ -23,6 +23,11 @@ class CourseController(@Autowired override val service: CourseService)
         return successRestResult(service.findAllWithCardName())
     }
 
+    @GetMapping("{id}/detail")
+    fun findCourseDetail(@PathVariable id: Long): RestResult {
+        return successRestResult(service.findCourseDetail(id))
+    }
+
     @PostMapping("{id}/bindImage")
     fun bindImage(@PathVariable id: Long, @RequestParam imageUrl: String): RestResult {
         service.bindImage(id, imageUrl)

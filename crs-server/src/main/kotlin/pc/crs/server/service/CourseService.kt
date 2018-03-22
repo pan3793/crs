@@ -9,13 +9,16 @@ import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
 import pc.crs.server.dao.CardDAO
 import pc.crs.server.dao.CourseDAO
+import pc.crs.server.dto.CourseDetailDTO
 import pc.crs.server.dto.CourseWithCardNameDTO
 import pc.crs.server.dto.RecommendedCoursesDTO
+import pc.crs.server.manager.FileManager
 
 @Service
 class CourseService(@Autowired override val dao: CourseDAO,
                     @Autowired val cardDAO: CardDAO,
-                    @Autowired val categoryService: CategoryService)
+                    @Autowired val categoryService: CategoryService,
+                    @Autowired val fileManager: FileManager)
     : BaseService<CourseDO, CourseDO, CourseDAO>() {
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
@@ -45,6 +48,22 @@ class CourseService(@Autowired override val dao: CourseDAO,
                 dto.cards += CourseWithCardNameDTO.Card(cardId, cardIdNameMap.getOrDefault(cardId, ""))
             }
             dto
+        }
+    }
+
+    fun findCourseDetail(id: Long): CourseDetailDTO = this.findById(id).let { courseDO ->
+        CourseDetailDTO().apply {
+            BeanUtils.copyProperties(courseDO, this)
+            this.cards = cardDAO.findAllByIdIn(courseDO.cardIds).map { cardDO ->
+                CourseDetailDTO.Card().apply {
+                    BeanUtils.copyProperties(cardDO, this)
+                    this.files = fileManager.getByIdList(cardDO.fileIds).map { fileDO ->
+                        CourseDetailDTO.Card.File().apply {
+                            BeanUtils.copyProperties(fileDO, this)
+                        }
+                    }
+                }
+            }
         }
     }
 

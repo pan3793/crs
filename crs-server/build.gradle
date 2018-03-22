@@ -5,6 +5,7 @@ dependencies {
     compile(project(':crs-common'))
     compile(project(':crs-domain'))
     compile(project(':crs-auth:crs-auth-client'))
+    compile(project(':crs-file:crs-file-domain'))
 
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
