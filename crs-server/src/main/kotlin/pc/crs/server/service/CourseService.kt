@@ -24,6 +24,13 @@ class CourseService(@Autowired override val dao: CourseDAO,
             "EQ_teacherName", "LIKE_teacherName"
     )
 
+    fun findRecommended(categoryId: Long?): List<CourseDO> {
+        categoryId?.let {
+            return dao.findAllByCategoryIdAndOrderByModifiedTimeLimit(categoryId, 4)
+        }
+        return dao.findAllByOrderByModifiedTimeLimit(5)
+    }
+
     fun findAllWithCardName(): Iterable<CourseDTOWithCardName> {
         val courseDOs = dao.findAll()
         val cardIdNameMap = cardDAO.findAllByIdIn(courseDOs.flatMap { it.cardIds }.distinct())

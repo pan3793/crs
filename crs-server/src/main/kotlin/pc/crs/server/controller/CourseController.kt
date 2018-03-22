@@ -13,6 +13,11 @@ import pc.crs.server.service.CourseService
 class CourseController(@Autowired override val service: CourseService)
     : BaseController<CourseDO, CourseDO, CourseService>() {
 
+    @GetMapping("recommended")
+    fun findRecommended(@RequestParam categoryId: Long?): RestResult {
+        return successRestResult(service.findRecommended(categoryId))
+    }
+
     @GetMapping("allWithCardName")
     fun findAllWithCardName(): RestResult {
         return successRestResult(service.findAllWithCardName())

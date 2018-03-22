@@ -65,89 +65,90 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
                 "P_NUM" -> pageNum = jsonObject.getInteger(queryString) ?: defaultPageNum
                 "P_SIZE" -> pageSize = jsonObject.getInteger(queryString) ?: defaultPageSize
                 "P_DISABLE" -> pageDisable = jsonObject.getBoolean(queryString) ?: false
-            }
-
-            val queryMetas = queryString.split('_').filterNot { it.isBlank() }
-            // 目前考虑到的所有查询条件至少由两部分查询元素构成
-            if (queryMetas.size < 2) {
-                logger.error("查询条件{}定义错误", queryString)
-                throw CriterionException("查询条件${queryString}定义错误")
-            }
-            when (queryMetas[0]) {
-                EQ.toString() -> criteria.add(eq(queryMetas[1], jsonObject[queryString]))
-                NEQ.toString() -> criteria.add(neq(queryMetas[1], jsonObject[queryString]))
-                LIKE.toString() -> criteria.add(like(queryMetas[1], jsonObject.getString(queryString)))
-                GT.toString() -> {
-                    if (queryMetas[1].contains("date", true)
-                            || queryMetas[1].contains("time", true)) {
-                        criteria.add(gt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
-                    } else {
-                        criteria.add(gt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
+                else -> {
+                    val queryMetas = queryString.split('_').filterNot { it.isBlank() }
+                    // 目前考虑到的所有查询条件至少由两部分查询元素构成
+                    if (queryMetas.size < 2) {
+                        logger.error("查询条件{}定义错误", queryString)
+                        throw CriterionException("查询条件${queryString}定义错误")
                     }
-                }
-                LT.toString() -> {
-                    if (queryMetas[1].contains("date", true)
-                            || queryMetas[1].contains("time", true)) {
-                        criteria.add(lt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
-                    } else {
-                        criteria.add(lt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                    }
-                }
-                GTE.toString() -> {
-                    if (queryMetas[1].contains("date", true)
-                            || queryMetas[1].contains("time", true)) {
-                        criteria.add(gte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
-                    } else {
-                        criteria.add(gte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                    }
-                }
-                LTE.toString() -> {
-                    if (queryMetas[1].contains("date", true)
-                            || queryMetas[1].contains("time", true)) {
-                        criteria.add(lte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
-                    } else {
-                        criteria.add(lte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
-                    }
-                }
-                IN.toString() -> criteria.add(`in`(queryMetas[1], jsonObject.getJSONArray(queryString)))
-                NIN.toString() -> criteria.add(nin(queryMetas[1], jsonObject.getJSONArray(queryString)))
-                "O" -> {
-                    if (jsonObject.containsKey(queryString)) {
-                        val priority = jsonObject.getIntValue(queryString)
-                        when (queryMetas.size) {
-                            2 -> orderAndPriorities.add(Sort.Order.by(queryMetas[1]) to priority)
-                            3 -> when (queryMetas[2]) {
-                                "ASC" -> orderAndPriorities.add(Sort.Order.asc(queryMetas[1]) to priority)
-                                "DESC" -> orderAndPriorities.add(Sort.Order.desc(queryMetas[1]) to priority)
-                                else -> {
-                                    logger.error("查询条件{}定义错误", queryString)
-                                    throw CriterionException("查询条件${queryString}定义错误")
-                                }
-                            }
-                            else -> {
-                                logger.error("查询条件{}定义错误", queryString)
-                                throw CriterionException("查询条件${queryString}定义错误")
+                    when (queryMetas[0]) {
+                        EQ.toString() -> criteria.add(eq(queryMetas[1], jsonObject[queryString]))
+                        NEQ.toString() -> criteria.add(neq(queryMetas[1], jsonObject[queryString]))
+                        LIKE.toString() -> criteria.add(like(queryMetas[1], jsonObject.getString(queryString)))
+                        GT.toString() -> {
+                            if (queryMetas[1].contains("date", true)
+                                    || queryMetas[1].contains("time", true)) {
+                                criteria.add(gt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                            } else {
+                                criteria.add(gt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
                             }
                         }
+                        LT.toString() -> {
+                            if (queryMetas[1].contains("date", true)
+                                    || queryMetas[1].contains("time", true)) {
+                                criteria.add(lt(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                            } else {
+                                criteria.add(lt(queryMetas[1], jsonObject.getBigDecimal(queryString)))
+                            }
+                        }
+                        GTE.toString() -> {
+                            if (queryMetas[1].contains("date", true)
+                                    || queryMetas[1].contains("time", true)) {
+                                criteria.add(gte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                            } else {
+                                criteria.add(gte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
+                            }
+                        }
+                        LTE.toString() -> {
+                            if (queryMetas[1].contains("date", true)
+                                    || queryMetas[1].contains("time", true)) {
+                                criteria.add(lte(queryMetas[1], jsonObject.getDate(queryString)?.toLocalDateTime()))
+                            } else {
+                                criteria.add(lte(queryMetas[1], jsonObject.getBigDecimal(queryString)))
+                            }
+                        }
+                        IN.toString() -> criteria.add(`in`(queryMetas[1], jsonObject.getJSONArray(queryString)))
+                        NIN.toString() -> criteria.add(nin(queryMetas[1], jsonObject.getJSONArray(queryString)))
+                        "O" -> {
+                            if (jsonObject.containsKey(queryString)) {
+                                val priority = jsonObject.getIntValue(queryString)
+                                when (queryMetas.size) {
+                                    2 -> orderAndPriorities.add(Sort.Order.by(queryMetas[1]) to priority)
+                                    3 -> when (queryMetas[2]) {
+                                        "ASC" -> orderAndPriorities.add(Sort.Order.asc(queryMetas[1]) to priority)
+                                        "DESC" -> orderAndPriorities.add(Sort.Order.desc(queryMetas[1]) to priority)
+                                        else -> {
+                                            logger.error("查询条件{}定义错误", queryString)
+                                            throw CriterionException("查询条件${queryString}定义错误")
+                                        }
+                                    }
+                                    else -> {
+                                        logger.error("查询条件{}定义错误", queryString)
+                                        throw CriterionException("查询条件${queryString}定义错误")
+                                    }
+                                }
+                            }
+                        }
+//                       AND.toString() -> {
+//                           if (queryMetas.size < 3) {
+//                               logger.error("查询条件{}定义错误", queryString)
+//                               throw CriterionException("查询条件${queryString}定义错误")
+//                           }
+//                           // TODO
+//                       }
+//                       OR.toString() -> {
+//                           if (queryMetas.size < 3) {
+//                               logger.error("查询条件{}定义错误", queryString)
+//                               throw CriterionException("查询条件${queryString}定义错误")
+//                           }
+//                           // TODO
+//                       }
+                        else -> {
+                            logger.error("查询条件{}定义错误", queryString)
+                            throw CriterionException("查询条件${queryString}定义错误")
+                        }
                     }
-                }
-//                AND.toString() -> {
-//                    if (queryMetas.size < 3) {
-//                        logger.error("查询条件{}定义错误", queryString)
-//                        throw CriterionException("查询条件${queryString}定义错误")
-//                    }
-//                    // TODO
-//                }
-//                OR.toString() -> {
-//                    if (queryMetas.size < 3) {
-//                        logger.error("查询条件{}定义错误", queryString)
-//                        throw CriterionException("查询条件${queryString}定义错误")
-//                    }
-//                    // TODO
-//                }
-                else -> {
-                    logger.error("查询条件{}定义错误", queryString)
-                    throw CriterionException("查询条件${queryString}定义错误")
                 }
             }
         }
