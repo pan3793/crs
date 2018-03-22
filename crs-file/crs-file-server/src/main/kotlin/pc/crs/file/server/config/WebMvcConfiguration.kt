@@ -1,4 +1,4 @@
-package pc.crs.auth.server.config
+package pc.crs.file.server.config
 
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext

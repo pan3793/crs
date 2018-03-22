@@ -2,7 +2,9 @@ package pc.crs.auth.client.interceptor
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.getBean
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import pc.crs.auth.client.context.AuthContextHolder
@@ -20,13 +22,22 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthInterceptor : HandlerInterceptorAdapter() {
+class AuthInterceptor : HandlerInterceptorAdapter(), ApplicationContextAware {
+
+    // 暂时绕开当前版本 Feign Bug
+    lateinit var appCtx: ApplicationContext
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        appCtx = applicationContext
+    }
+
+    val authManager: AuthManager by lazy {
+        appCtx.getBean<AuthManager>(AuthManager::javaClass)
+    }
 
     companion object {
         const val CRS_TOKEN = "CRS-TOKEN"
     }
-
-    @Autowired lateinit var authManager: AuthManager
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 

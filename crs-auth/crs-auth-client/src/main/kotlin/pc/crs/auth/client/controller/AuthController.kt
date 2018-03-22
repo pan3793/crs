@@ -1,6 +1,8 @@
 package pc.crs.auth.client.controller
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.getBean
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,10 +14,18 @@ import pc.crs.common.bean.successRestResult
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthController {
+class AuthController : ApplicationContextAware {
 
-    @Autowired
-    lateinit var authManager: AuthManager
+    // 暂时绕开当前版本 Feign Bug
+    lateinit var appCtx: ApplicationContext
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        appCtx = applicationContext
+    }
+
+    val authManager: AuthManager by lazy {
+        appCtx.getBean<AuthManager>(AuthManager::javaClass)
+    }
 
     @PostMapping("/login")
     fun login(@RequestParam loginName: String, @RequestParam password: String): RestResult {
