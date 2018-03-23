@@ -1,6 +1,5 @@
 package pc.crs.file.server.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import feign.codec.Decoder
 import feign.optionals.OptionalDecoder
 import org.springframework.beans.factory.ObjectFactory
@@ -12,12 +11,11 @@ import org.springframework.context.annotation.Configuration
 import pc.crs.common.config.CustomizedResponseEntityDecoder
 
 @Configuration
-class FeignConfiguration(@Autowired val messageConverters: ObjectFactory<HttpMessageConverters>,
-                         @Autowired val objectMapper: ObjectMapper) {
+class FeignConfiguration(@Autowired val messageConverters: ObjectFactory<HttpMessageConverters>) {
 
     @Bean
     fun feignDecoder(): Decoder {
-        return OptionalDecoder(CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters), objectMapper))
+        return OptionalDecoder(CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters)))
     }
 }
 
