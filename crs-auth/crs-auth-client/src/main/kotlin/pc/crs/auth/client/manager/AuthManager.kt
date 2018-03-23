@@ -18,8 +18,7 @@ interface AuthManager {
     fun checkToken(@RequestParam token: String): Pair<Boolean, UserInfo?>
 
     @PostMapping("/login")
-    fun login(@RequestParam loginName: String, @RequestParam password: String)
-            : Pair<Boolean, UserInfo?>
+    fun login(@RequestParam loginName: String, @RequestParam password: String): Pair<Boolean, UserInfo?>
 
     @PostMapping("/logout")
     fun logout(@RequestParam token: String)
