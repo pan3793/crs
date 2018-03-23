@@ -12,7 +12,7 @@ interface AuthManager {
     fun checkAnonymous(@RequestParam url: String): Boolean
 
     @PostMapping("/checkPermission")
-    fun checkPermission(@RequestParam url: String, @RequestParam token: String): Triple<Int, String, UserInfo?>
+    fun checkPermission(@RequestParam token: String, @RequestParam url: String): Triple<Int, String, UserInfo?>
 
     @PostMapping("/checkToken")
     fun checkToken(@RequestParam token: String): Pair<Boolean, UserInfo?>
