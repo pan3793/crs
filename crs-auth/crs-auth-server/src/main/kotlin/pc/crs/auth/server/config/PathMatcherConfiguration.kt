@@ -1,4 +1,4 @@
-package pc.crs.auth.server.config;
+package pc.crs.auth.server.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
