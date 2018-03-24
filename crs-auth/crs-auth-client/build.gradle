@@ -4,7 +4,6 @@ dependencies {
 
     compileOnly 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    compileOnly 'org.springframework.cloud:spring-cloud-openfeign-core'
     compileOnly 'org.springframework.boot:spring-boot-starter-web'
 
     compileOnly "com.alibaba:fastjson"

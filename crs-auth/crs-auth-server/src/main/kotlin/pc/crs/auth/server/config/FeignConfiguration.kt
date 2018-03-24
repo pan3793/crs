@@ -4,7 +4,6 @@ import feign.codec.Decoder
 import org.springframework.beans.factory.ObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters
-import org.springframework.cloud.openfeign.support.SpringDecoder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pc.crs.common.config.CustomizedResponseEntityDecoder
@@ -14,7 +13,7 @@ class FeignConfiguration(@Autowired val messageConverters: ObjectFactory<HttpMes
 
     @Bean
     fun feignDecoder(): Decoder {
-        return CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters))
+        return OptionalDecoder(CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters)))
     }
 }
 
