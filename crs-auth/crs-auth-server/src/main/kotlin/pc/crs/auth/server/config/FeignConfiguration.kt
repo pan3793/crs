@@ -1,7 +1,6 @@
 package pc.crs.auth.server.config
 
 import feign.codec.Decoder
-import feign.optionals.OptionalDecoder
 import org.springframework.beans.factory.ObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters
@@ -15,7 +14,7 @@ class FeignConfiguration(@Autowired val messageConverters: ObjectFactory<HttpMes
 
     @Bean
     fun feignDecoder(): Decoder {
-        return OptionalDecoder(CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters)))
+        return CustomizedResponseEntityDecoder(SpringDecoder(this.messageConverters))
     }
 }
 
