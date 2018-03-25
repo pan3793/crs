@@ -28,7 +28,7 @@ class UserService(@Autowired override val dao: UserDAO,
         val userDO = dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }.apply { password = encryptPassword(newPassword) }
-        dao.save(userDO)
+        dao.saveAndFlush(userDO)
     }
 
     @Throws(ValidateException::class)
@@ -71,7 +71,7 @@ class UserService(@Autowired override val dao: UserDAO,
         } ?: entity.javaClass.newInstance()
         BeanUtils.copyProperties(entity, userDO, *dtoReadOnlyIgnoreFiledList)
         validateDO(userDO)
-        dao.save(userDO)
+        dao.saveAndFlush(userDO)
 
         // 修改 user_role
         val originalRoleIds = userRoleDAO.findByUserId(userDO.id!!).map { it.roleId }
@@ -82,7 +82,7 @@ class UserService(@Autowired override val dao: UserDAO,
         if (toRemoveRoleIds.isNotEmpty()) {
             userRoleDAO.findByUserIdAndRoleIdIn(userDO.id!!, toRemoveRoleIds).forEach { userRoleDAO.delete(it) }
         }
-        toAddRoleIds.forEach { userRoleDAO.save(UserRoleDO(userId = userDO.id!!, roleId = it)) }
+        toAddRoleIds.forEach { userRoleDAO.saveAndFlush(UserRoleDO(userId = userDO.id!!, roleId = it)) }
 
         return convertDO2DTO(userDO)
     }

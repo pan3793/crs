@@ -177,7 +177,7 @@ abstract class BaseService<DTO : Any, DO : BaseDO, out DAO : BaseDAO<DO>> {
         } ?: entity.javaClass.newInstance()
         BeanUtils.copyProperties(entity, `do`, *dtoReadOnlyIgnoreFiledList)
         validateDO(`do`)
-        dao.save(`do`)
+        dao.saveAndFlush(`do`)
         return convertDO2DTO(`do`)
     }
 

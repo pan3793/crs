@@ -6,6 +6,7 @@ import pc.crs.common.base.service.BaseService
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.constant.QUESTION_CHECK_TYPE_LIST
 import pc.crs.common.constant.QUESTION_TYPE_LIST
+import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.QuestionDO
 import pc.crs.server.dao.QuestionDAO
 
@@ -29,4 +30,22 @@ class QuestionService(@Autowired override val dao: QuestionDAO)
     fun fetchTypeList() = typeList
 
     fun fetchCheckTypeList() = checkTypeList
+
+    fun editAskAndAnswer(id: Long, ask: String, answer: String) {
+        validateAskAndAnswer(ask, answer)
+        val questionDO = dao.findById(id).orElseThrow {
+            RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
+        }.apply {
+            this.ask = ask
+            this.answer = answer
+        }
+        dao.saveAndFlush(questionDO)
+    }
+
+    fun clearAskAndAnswer(id: Long) {
+        editAskAndAnswer(id, "", "")
+    }
+
+    fun validateAskAndAnswer(ask: String, answer: String) {
+    }
 }

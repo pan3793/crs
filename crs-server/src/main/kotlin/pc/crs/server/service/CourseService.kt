@@ -88,7 +88,7 @@ class CourseService(@Autowired override val dao: CourseDAO,
         val courseDO = dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }.apply { this.imageUrl = imageUrl }
-        dao.save(courseDO)
+        dao.saveAndFlush(courseDO)
     }
 
     fun validateImage(imageUrl: String) {
@@ -99,19 +99,19 @@ class CourseService(@Autowired override val dao: CourseDAO,
         val courseDO = dao.findById(id).orElseThrow {
             RecordNotFoundException("${this.javaClass.simpleName},id=${id}记录未找到")
         }.apply { this.imageUrl = "" }
-        dao.save(courseDO)
+        dao.saveAndFlush(courseDO)
     }
 
     fun bindCard(id: Long, cardId: Long) {
         val courseDO = findById(id)
         if (!courseDO.cardIds.contains(cardId))
             courseDO.cardIds += cardId
-        dao.save(courseDO)
+        dao.saveAndFlush(courseDO)
     }
 
     fun removeCard(id: Long, cardId: Long) {
         val courseDO = findById(id)
         courseDO.cardIds -= cardId
-        dao.save(courseDO)
+        dao.saveAndFlush(courseDO)
     }
 }
