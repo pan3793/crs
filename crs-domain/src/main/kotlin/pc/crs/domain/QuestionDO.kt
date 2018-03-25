@@ -19,6 +19,7 @@ data class QuestionDO(
         @Column(nullable = false, columnDefinition = "mediumtext") var ask: String = "",
         @Column(nullable = false, columnDefinition = "mediumtext") var answer: String = "",
 
+        @Column(nullable = false) var type: String = "",
         @Column(nullable = false) var checkType: String = "1",
         @Column(nullable = false) var teacherId: Long = -1,
         @Column(nullable = false) var teacherName: String = ""

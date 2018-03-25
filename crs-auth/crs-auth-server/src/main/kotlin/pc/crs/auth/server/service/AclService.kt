@@ -31,7 +31,7 @@ class AclService(@Autowired override val dao: AclDAO,
     }
 
     fun checkAnonymous(url: String): Boolean {
-        dao.findAll()
+        dao.findAllByOrderByPriority()
                 .firstOrNull { pathMatcher.match(it.url, url) }
                 ?.let {
                     logger.info("匹配到 acl={}", it)

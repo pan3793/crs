@@ -13,6 +13,11 @@ import pc.crs.server.service.CourseService
 class CourseController(@Autowired override val service: CourseService)
     : BaseController<CourseDO, CourseDO, CourseService>() {
 
+    @GetMapping("idNameList")
+    fun getIdNameList(): RestResult {
+        return successRestResult(service.fetchIdNameList())
+    }
+
     @GetMapping("recommended")
     fun findRecommended(): RestResult {
         return successRestResult(service.findRecommended())

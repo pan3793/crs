@@ -1,5 +1,7 @@
 package pc.crs.common.constant
 
+import pc.crs.common.bean.CodeNameDTO
+
 /**
  * RestResult状态码
  */
@@ -30,3 +32,21 @@ val BASE_DTO_READ_IGNORE_FIELD_LIST = arrayOf("creator", "modifier", "createTime
  */
 const val DEFAULT_PAGE_NUM = 0
 const val DEFAULT_PAGE_SIZE = 10
+
+/**
+ * 题目类型
+ */
+val QUESTION_TYPE_LIST = listOf(
+        CodeNameDTO("1", "单选题"),
+        CodeNameDTO("2", "多选题"),
+        CodeNameDTO("3", "填空题"),
+        CodeNameDTO("4", "问答题")
+)
+
+/**
+ * 题目批阅类型
+ */
+val QUESTION_CHECK_TYPE_LIST = listOf(
+        CodeNameDTO("1", "自动"),
+        CodeNameDTO("2", "手工")
+)

@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
+import pc.crs.common.bean.IdNameDTO
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
@@ -41,6 +42,8 @@ class CourseService(@Autowired override val dao: CourseDAO,
             "EQ_teacherId", "IN_teacherId",
             "EQ_teacherName", "LIKE_teacherName"
     )
+
+    fun fetchIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }
 
     fun findRecommended(): RecommendedCoursesDTO =
             RecommendedCoursesDTO(all = dao.findAllByOrderByModifiedTimeLimit(5),
