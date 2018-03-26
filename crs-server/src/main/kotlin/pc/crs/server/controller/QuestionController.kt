@@ -31,7 +31,7 @@ class QuestionController(@Autowired override val service: QuestionService)
         return successRestResult()
     }
 
-    @PostMapping("{id}/editAskAndAnswer")
+    @PostMapping("{id}/clearAskAndAnswer")
     fun clearAskAndAnswer(@PathVariable id: Long): RestResult {
         service.clearAskAndAnswer(id)
         return successRestResult()
