@@ -25,7 +25,7 @@ class QuestionController(@Autowired override val service: QuestionService)
     }
 
     @PostMapping("{id}/editAskAndAnswer")
-    fun editAskAndAnswer(@PathVariable id: Long, askAndAnswerDTO: AskAndAnswerDTO): RestResult {
+    fun editAskAndAnswer(@PathVariable id: Long, @RequestBody askAndAnswerDTO: AskAndAnswerDTO): RestResult {
         val (ask, answer) = askAndAnswerDTO
         service.editAskAndAnswer(id, ask, answer)
         return successRestResult()
