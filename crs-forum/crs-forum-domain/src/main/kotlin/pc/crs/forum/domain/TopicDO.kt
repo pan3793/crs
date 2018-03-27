@@ -14,5 +14,6 @@ data class TopicDO(
         @Column(nullable = false) var blockId: Long = -1,
         @Column(nullable = false) var keywords: String = "",
         @Column(nullable = false) var name: String = "",
+        @Column(nullable = false, columnDefinition = "mediumtext") var content: String = "{}",
         @Column(nullable = false) var discussionIds: String = ""
 ) : BaseDO()
