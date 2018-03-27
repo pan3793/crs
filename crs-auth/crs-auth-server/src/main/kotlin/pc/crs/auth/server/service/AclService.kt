@@ -10,6 +10,7 @@ import pc.crs.auth.server.dao.AclDAO
 import pc.crs.auth.server.dao.UserDAO
 import pc.crs.auth.server.dao.UserRoleDAO
 import pc.crs.common.base.service.BaseService
+import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.constant.NO_PERMISSION_CODE
 import pc.crs.common.constant.SUCCESS_CODE
 import pc.crs.common.constant.TOKEN_INVALID_CODE
@@ -25,6 +26,13 @@ class AclService(@Autowired override val dao: AclDAO,
     companion object {
         const val DEFAULT_ACL_UNMATCHED_ACTION = false
     }
+
+    override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
+            "EQ_name", "LIKE_name",
+            "EQ_url", "LIKE_url",
+            "EQ_anonymous",
+            "EQ_affirmative"
+    )
 
     override fun findAll(): Iterable<AclDO> {
         return dao.findAllByOrderByPriority().map { convertDO2DTO(it) }

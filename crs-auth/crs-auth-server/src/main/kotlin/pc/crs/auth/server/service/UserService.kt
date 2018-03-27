@@ -12,6 +12,7 @@ import pc.crs.auth.server.dao.UserRoleDAO
 import pc.crs.auth.server.dto.UserDTO
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.bean.IdNameDTO
+import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.common.exception.ValidateException
 
@@ -20,6 +21,11 @@ class UserService(@Autowired override val dao: UserDAO,
                   @Autowired val userRoleDAO: UserRoleDAO,
                   @Autowired val roleDAO: RoleDAO)
     : BaseService<UserDTO, UserDO, UserDAO>() {
+
+    override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
+            "EQ_name", "LIKE_name",
+            "EQ_loginName", "LIKE_loginName"
+    )
 
     fun fetchIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }
 
