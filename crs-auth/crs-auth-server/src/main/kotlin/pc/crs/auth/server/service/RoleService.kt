@@ -14,7 +14,7 @@ class RoleService(@Autowired override var dao: RoleDAO)
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
             "EQ_code", "LIKE_code",
-            "EQ_name", "LIKE_name"
+            "LIKE_name"
     )
 
     fun getIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }

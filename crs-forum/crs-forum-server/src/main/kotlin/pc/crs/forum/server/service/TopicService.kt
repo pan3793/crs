@@ -14,6 +14,6 @@ class TopicService(@Autowired override val dao: TopicDAO)
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
             "EQ_blockId", "IN_blockId",
             "LIKE_keywords",
-            "LIKE_title"
+            "LIKE_name"
     )
 }

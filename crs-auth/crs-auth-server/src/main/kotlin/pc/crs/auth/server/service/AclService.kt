@@ -28,7 +28,7 @@ class AclService(@Autowired override val dao: AclDAO,
     }
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
-            "EQ_name", "LIKE_name",
+            "LIKE_name",
             "EQ_url", "LIKE_url",
             "EQ_anonymous",
             "EQ_affirmative"

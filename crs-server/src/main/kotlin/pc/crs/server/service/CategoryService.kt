@@ -13,7 +13,7 @@ class CategoryService(@Autowired override val dao: CategoryDAO)
     : BaseService<CategoryDO, CategoryDO, CategoryDAO>() {
 
     override val allowedQueryConditions: List<String> = BASE_ALLOWED_QUERY_CONDITION_LIST + listOf(
-            "EQ_name", "LIKE_name"
+            "LIKE_name"
     )
 
     fun fetchIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }
