@@ -13,5 +13,5 @@ import javax.persistence.Table
 data class DiscussionDO(
         @Column(nullable = false) var topicId: Long = -1,
         @Column(nullable = false) var replyId: Long = -1,
-        @Column(nullable = false, columnDefinition = "mediumtext") var content: String = "{}"
+        @Column(nullable = false, columnDefinition = "mediumtext") var content: String = ""
 ) : BaseDO()
