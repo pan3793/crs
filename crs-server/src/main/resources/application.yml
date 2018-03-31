@@ -1,6 +1,3 @@
-server:
-  port: 11002
-
 logging:
   file: ${HOME}/logs/${spring.application.name}.log
   level:
@@ -12,18 +9,12 @@ eureka:
       defaultZone: http://localhost:11000/eureka/
 
 spring:
-  application:
-      name: crs-server
+  profiles:
+    active: local
 
   http:
     encoding:
       force: true
-
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/crs?useSSL=false
-    driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: 123
 
   jpa:
     show-sql: true

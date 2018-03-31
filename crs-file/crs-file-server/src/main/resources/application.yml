@@ -1,34 +1,18 @@
-server:
-  port: 11004
-
 logging:
   file: ${HOME}/logs/${spring.application.name}.log
   level:
     root: info
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:11000/eureka/
-
 spring:
-  application:
-      name: crs-file-server
+  profiles:
+    active: local
 
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+  application:
+    name: crs-file-server
 
   http:
     encoding:
       force: true
-
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/crs_file?useSSL=false
-    driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: 123
 
   jpa:
     show-sql: true
@@ -43,9 +27,3 @@ spring:
     dateFormat: yyyy-MM-dd HH:mm:ss
     serialization:
       indentOutput: true
-
-file:
-  basePath: /home/pc/share/nginx/res
-
-#host: http://101.132.159.21
-host:
