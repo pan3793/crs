@@ -1,8 +1,44 @@
 apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
+apply plugin: 'org.hidetake.ssh'
 
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
-//    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}
+
+bootJar {
+    launchScript()
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+remotes {
+    aliyunServer {
+        host = '101.132.159.21'
+        user = 'root'
+        identity = file("${rootDir}/id_rsa")
+    }
+}
+
+static def now() {
+    new Date().format('yyyy-MM-dd-HH:mm:ss')
+}
+
+task pkg
+pkg.dependsOn 'clean'
+pkg.dependsOn 'bootJar'
+bootJar.shouldRunAfter 'clean'
+
+task deploy(dependsOn: pkg) << {
+    ssh.run {
+        session(remotes.aliyunServer) {
+            execute 'systemctl stop crs-eureka-server.service'
+            execute "mv /root/crs-bin/crs-eureka-server.jar /root/crs-bin/crs-eureka-server-${now()}.jar", ignoreError: true
+            put from: "${buildDir}/libs/crs-eureka-server-0.0.1-SNAPSHOT.jar", into: '/root/crs-bin/crs-eureka-server.jar'
+            execute 'chmod u+x /root/crs-bin/crs-eureka-server.jar'
+            execute 'systemctl start crs-eureka-server.service'
+        }
+    }
 }

@@ -12,6 +12,9 @@ spring:
   profiles:
     active: local
 
+  application:
+    name: crs-server
+
   http:
     encoding:
       force: true

@@ -1,21 +1,57 @@
 apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
+apply plugin: 'org.hidetake.ssh'
 
 dependencies {
     compile(project(':crs-auth:crs-auth-domain'))
-	compile(project(':crs-auth:crs-auth-common'))
-	compile(project(':crs-auth:crs-auth-client'))
+    compile(project(':crs-auth:crs-auth-common'))
+    compile(project(':crs-auth:crs-auth-client'))
 
-	compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-redis'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
-//	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 
     compile "com.alibaba:fastjson"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
-	compile 'mysql:mysql-connector-java'
+    compile 'mysql:mysql-connector-java'
+}
+
+bootJar {
+    launchScript()
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+remotes {
+    aliyunServer {
+        host = '47.100.96.14'
+        user = 'root'
+        identity = file("${rootDir}/id_rsa")
+    }
+}
+
+static def now() {
+    new Date().format('yyyy-MM-dd-HH:mm:ss')
+}
+
+task pkg
+pkg.dependsOn 'clean'
+pkg.dependsOn 'bootJar'
+bootJar.shouldRunAfter 'clean'
+
+task deploy(dependsOn: pkg) << {
+    ssh.run {
+        session(remotes.aliyunServer) {
+            execute 'systemctl stop crs-auth-server.service'
+            execute "mv /root/crs-bin/crs-auth-server.jar /root/crs-bin/crs-auth-server-${now()}.jar", ignoreError: true
+            put from: "${buildDir}/libs/crs-auth-server-0.0.1-SNAPSHOT.jar", into: '/root/crs-bin/crs-auth-server.jar'
+            execute 'chmod u+x /root/crs-bin/crs-auth-server.jar'
+            execute 'systemctl start crs-auth-server.service'
+        }
+    }
 }

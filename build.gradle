@@ -7,6 +7,7 @@ buildscript {
         mysqlConnectorVersion = '5.1.45'
         swagger2Version = '2.8.0'
         hutoolVersion = '4.0.8'
+        sshPluginVersion = '2.9.0'
     }
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -18,6 +19,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        classpath("org.hidetake:gradle-ssh-plugin:${sshPluginVersion}")
     }
 }
 
@@ -89,17 +91,32 @@ task pkg << {
     println '项目打包完成！'
 }
 
+task deploy << {
+    println '项目部署完成！'
+}
+
+task deployEureka << {
+    println 'Eureka注册中心部署完成！'
+}
+
 clean.dependsOn ':crs-eureka-server:clean'
 clean.dependsOn ':crs-auth:crs-auth-server:clean'
 clean.dependsOn ':crs-file:crs-file-server:clean'
 clean.dependsOn ':crs-forum:crs-forum-server:clean'
 clean.dependsOn ':crs-server:clean'
 
-pkg.dependsOn ':crs-eureka-server:bootWar'
-pkg.dependsOn ':crs-auth:crs-auth-server:bootWar'
-pkg.dependsOn ':crs-file:crs-file-server:bootWar'
-pkg.dependsOn ':crs-forum:crs-forum-server:bootWar'
-pkg.dependsOn ':crs-server:bootWar'
+pkg.dependsOn ':crs-eureka-server:bootJar'
+pkg.dependsOn ':crs-auth:crs-auth-server:bootJar'
+pkg.dependsOn ':crs-file:crs-file-server:bootJar'
+pkg.dependsOn ':crs-forum:crs-forum-server:bootJar'
+pkg.dependsOn ':crs-server:bootJar'
 
 pkg.dependsOn 'clean'
 pkg.shouldRunAfter 'clean'
+
+deploy.dependsOn ':crs-auth:crs-auth-server:deploy'
+deploy.dependsOn ':crs-file:crs-file-server:deploy'
+deploy.dependsOn ':crs-forum:crs-forum-server:deploy'
+deploy.dependsOn ':crs-server:deploy'
+
+deployEureka.dependsOn ':crs-eureka-server:deploy'

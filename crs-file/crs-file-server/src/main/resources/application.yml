@@ -10,6 +10,10 @@ spring:
   application:
     name: crs-file-server
 
+  output:
+    ansi:
+      enabled: always
+
   http:
     encoding:
       force: true

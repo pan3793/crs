@@ -1,5 +1,5 @@
 apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
+apply plugin: 'org.hidetake.ssh'
 
 dependencies {
     compile(project(':crs-common'))
@@ -11,11 +11,46 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compile 'org.springframework.boot:spring-boot-starter-web'
-//    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
     compile "com.alibaba:fastjson"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
     compile 'mysql:mysql-connector-java'
+}
+
+bootJar {
+    launchScript()
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+remotes {
+    aliyunServer {
+        host = '101.132.159.21'
+        user = 'root'
+        identity = file("${rootDir}/id_rsa")
+    }
+}
+
+static def now() {
+    new Date().format('yyyy-MM-dd-HH:mm:ss')
+}
+
+task pkg
+pkg.dependsOn 'clean'
+pkg.dependsOn 'bootJar'
+bootJar.shouldRunAfter 'clean'
+
+task deploy(dependsOn: pkg) << {
+    ssh.run {
+        session(remotes.aliyunServer) {
+            execute 'systemctl stop crs-file-server.service'
+            execute "mv /root/crs-bin/crs-file-server.jar /root/crs-bin/crs-file-server-${now()}.jar", ignoreError: true
+            put from: "${buildDir}/libs/crs-file-server-0.0.1-SNAPSHOT.jar", into: '/root/crs-bin/crs-file-server.jar'
+            execute 'chmod u+x /root/crs-bin/crs-file-server.jar'
+            execute 'systemctl start crs-file-server.service'
+        }
+    }
 }
