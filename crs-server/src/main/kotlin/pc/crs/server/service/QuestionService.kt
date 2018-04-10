@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
+import pc.crs.common.constant.BASE_DTO_READ_IGNORE_FIELD_LIST
 import pc.crs.common.constant.QUESTION_CHECK_TYPE_LIST
 import pc.crs.common.constant.QUESTION_TYPE_LIST
 import pc.crs.common.exception.RecordNotFoundException
@@ -21,6 +22,10 @@ class QuestionService(@Autowired override val dao: QuestionDAO)
             "EQ_teacherName", "LIKE_teacherName",
             "EQ_type", "IN_type",
             "EQ_checkType", "IN_checkType"
+    )
+
+    override val dtoReadOnlyIgnoreFiledList = BASE_DTO_READ_IGNORE_FIELD_LIST + listOf(
+            "ask", "answer"
     )
 
     val typeList = QUESTION_TYPE_LIST

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.bean.IdNameDTO
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
+import pc.crs.common.constant.BASE_DTO_READ_IGNORE_FIELD_LIST
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
 import pc.crs.server.dao.CardDAO
@@ -41,6 +42,10 @@ class CourseService(@Autowired override val dao: CourseDAO,
             "EQ_categoryName", "LIKE_categoryName",
             "EQ_teacherId", "IN_teacherId",
             "EQ_teacherName", "LIKE_teacherName"
+    )
+
+    override val dtoReadOnlyIgnoreFiledList = BASE_DTO_READ_IGNORE_FIELD_LIST + listOf(
+            "imageUrl", "cardIds"
     )
 
     fun fetchIdNameList(): List<IdNameDTO> = dao.findAll().map { IdNameDTO(it.id!!, it.name) }
