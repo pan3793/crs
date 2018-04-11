@@ -3,11 +3,6 @@ logging:
   level:
     root: info
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:11000/eureka/
-
 spring:
   profiles:
     active: local

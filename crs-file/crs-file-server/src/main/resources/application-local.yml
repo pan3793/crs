@@ -21,4 +21,4 @@ spring:
 file:
   basePath: /home/pc/share/nginx/res
 
-host:
+host: ''
