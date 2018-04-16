@@ -31,7 +31,8 @@ class AclService(@Autowired override val dao: AclDAO,
             "LIKE_name",
             "EQ_url", "LIKE_url",
             "EQ_anonymous",
-            "EQ_affirmative"
+            "EQ_affirmative",
+            "O_priority_ASC"
     )
 
     override fun findAll(): Iterable<AclDO> {
