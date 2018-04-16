@@ -1,5 +1,7 @@
 package pc.crs.server.controller
 
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import pc.crs.common.base.controller.BaseController
@@ -26,6 +28,12 @@ class CourseController(@Autowired override val service: CourseService)
     @GetMapping("allWithCardName")
     fun findAllWithCardName(): RestResult {
         return successRestResult(service.findAllWithCardName())
+    }
+
+    @PostMapping("queryWithCardName")
+    fun queryWithCardName(@RequestBody json: String?): RestResult {
+        val jsonObject = JSON.parseObject(json) ?: JSONObject()
+        return successRestResult(service.queryWithCardName(jsonObject))
     }
 
     @GetMapping("{id}/detail")

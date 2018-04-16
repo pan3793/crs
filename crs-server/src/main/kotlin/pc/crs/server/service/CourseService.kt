@@ -1,15 +1,18 @@
 package pc.crs.server.service
 
+import com.alibaba.fastjson.JSONObject
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import pc.crs.common.base.service.BaseService
 import pc.crs.common.bean.IdNameDTO
 import pc.crs.common.constant.BASE_ALLOWED_QUERY_CONDITION_LIST
 import pc.crs.common.constant.BASE_DTO_READ_IGNORE_FIELD_LIST
+import pc.crs.common.exception.CriterionException
 import pc.crs.common.exception.RecordNotFoundException
 import pc.crs.domain.CourseDO
 import pc.crs.server.dao.CardDAO
@@ -63,6 +66,22 @@ class CourseService(@Autowired override val dao: CourseDAO,
                 .associate { it.id to it.name }
 
         return courseDOs.map { courseDO ->
+            val dto = CourseWithCardNameDTO()
+            BeanUtils.copyProperties(courseDO, dto)
+            courseDO.cardIds.forEach { cardId ->
+                dto.cards += CourseWithCardNameDTO.Card(cardId, cardIdNameMap.getOrDefault(cardId, ""))
+            }
+            dto
+        }
+    }
+
+    @Throws(CriterionException::class)
+    fun queryWithCardName(jsonObject: JSONObject): Page<CourseWithCardNameDTO> {
+        val courseDOPage = this.query(jsonObject)
+        val cardIdNameMap = cardDAO.findAllByIdIn(courseDOPage.toList().flatMap { it.cardIds }.distinct())
+                .associate { it.id to it.name }
+
+        return courseDOPage.map { courseDO ->
             val dto = CourseWithCardNameDTO()
             BeanUtils.copyProperties(courseDO, dto)
             courseDO.cardIds.forEach { cardId ->
