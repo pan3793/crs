@@ -1,8 +1,7 @@
 package pc.crs.domain
 
 import pc.crs.common.base.domain.BaseDO
-import java.time.Duration
-import java.time.LocalDateTime
+import pc.crs.common.convert.LongListJsonConverter
 import javax.persistence.*
 
 @Entity
@@ -17,11 +16,7 @@ data class ExamDO(
         @Column(nullable = false) var teacherName: String = "",
         @Column(nullable = false) var courseId: Long = -1,
         @Column(nullable = false) var courseName: String = "",
-        @Column(nullable = false) var startTime: LocalDateTime = LocalDateTime.now(),
-        @Column(nullable = false) var endTime: LocalDateTime = LocalDateTime.now(),
 
-        @Basic(fetch = FetchType.LAZY) @Column(nullable = false, columnDefinition = "text")
-        var generateStrategy: String = "{}",
-
-        @Column(nullable = false) var duration: Duration = Duration.ZERO
+        @Convert(converter = LongListJsonConverter::class) @Column(nullable = false)
+        var questionIds: List<Long> = emptyList()
 ) : BaseDO()
