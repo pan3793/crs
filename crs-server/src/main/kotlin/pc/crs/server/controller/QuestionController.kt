@@ -19,9 +19,9 @@ class QuestionController(@Autowired override val service: QuestionService)
         return successRestResult(service.fetchTypeList())
     }
 
-    @GetMapping("checkTypeList")
-    fun fetchCheckTypeList(): RestResult {
-        return successRestResult(service.fetchCheckTypeList())
+    @GetMapping("byCourseId")
+    fun fetchByCourseId(@RequestParam courseId: Long) : RestResult {
+        return successRestResult(service.fetchByCourseId(courseId))
     }
 
     @PostMapping("{id}/editAskAndAnswer")

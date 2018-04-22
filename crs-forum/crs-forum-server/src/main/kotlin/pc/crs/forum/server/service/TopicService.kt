@@ -22,7 +22,7 @@ class TopicService(@Autowired override val dao: TopicDAO,
             "LIKE_name"
     )
 
-    fun findTopicDetail(id: Long): TopicDetailDTO = this.findById(id).let { topicDO ->
+    fun findTopicDetail(id: Long): TopicDetailDTO = findById(id).let { topicDO ->
         TopicDetailDTO().apply {
             BeanUtils.copyProperties(topicDO, this)
             this.discussions = discussionDAO.findAllByIdIn(topicDO.discussionIds).map { discussionDO ->

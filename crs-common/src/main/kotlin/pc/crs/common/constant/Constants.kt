@@ -43,11 +43,3 @@ val QUESTION_TYPE_LIST = listOf(
         CodeNameDTO("3", "填空题"),
         CodeNameDTO("4", "问答题")
 )
-
-/**
- * 题目批阅类型
- */
-val QUESTION_CHECK_TYPE_LIST = listOf(
-        CodeNameDTO("1", "自动"),
-        CodeNameDTO("2", "手工")
-)
