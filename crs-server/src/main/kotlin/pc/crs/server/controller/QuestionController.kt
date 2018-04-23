@@ -2,6 +2,7 @@ package pc.crs.server.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import pc.crs.common.aop.annotation.Log
 import pc.crs.common.base.controller.BaseController
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.successRestResult
@@ -14,16 +15,19 @@ import pc.crs.server.service.QuestionService
 class QuestionController(@Autowired override val service: QuestionService)
     : BaseController<QuestionDO, QuestionDO, QuestionService>() {
 
+    @Log
     @GetMapping("typeList")
     fun fetchTypeList(): RestResult {
         return successRestResult(service.fetchTypeList())
     }
 
+    @Log
     @GetMapping("byCourseId")
     fun fetchByCourseId(@RequestParam courseId: Long) : RestResult {
         return successRestResult(service.fetchByCourseId(courseId))
     }
 
+    @Log
     @PostMapping("{id}/editAskAndAnswer")
     fun editAskAndAnswer(@PathVariable id: Long, @RequestBody askAndAnswerDTO: AskAndAnswerDTO): RestResult {
         val (ask, answer) = askAndAnswerDTO
@@ -31,6 +35,7 @@ class QuestionController(@Autowired override val service: QuestionService)
         return successRestResult()
     }
 
+    @Log
     @PostMapping("{id}/clearAskAndAnswer")
     fun clearAskAndAnswer(@PathVariable id: Long): RestResult {
         service.clearAskAndAnswer(id)

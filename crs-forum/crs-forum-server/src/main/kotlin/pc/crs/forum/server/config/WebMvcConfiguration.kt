@@ -23,6 +23,6 @@ class WebMvcConfiguration : WebMvcConfigurer, ApplicationContextAware {
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-//        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
     }
 }

@@ -9,6 +9,8 @@ logging:
 eureka:
   instance:
     hostname: 0.0.0.0
+  server:
+    enable-self-preservation: false
   client:
     registerWithEureka: false
     fetchRegistry: false

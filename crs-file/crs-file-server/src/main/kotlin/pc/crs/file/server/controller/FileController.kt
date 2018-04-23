@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import pc.crs.common.aop.annotation.Log
 import pc.crs.common.base.controller.BaseController
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.failureRestResult
@@ -25,12 +26,14 @@ class FileController(@Autowired override val service: FileService,
                      @Value("\${host}") val host: String)
     : BaseController<FileDO, FileDO, FileService>() {
 
+    @Log
     @PostMapping("queryByIds")
     fun getByIdList(@RequestBody json: String): RestResult {
         val ids = JSON.parseObject<List<Long>>(json, object : TypeReference<List<Long>>() {})
         return successRestResult(service.findAllByIdIn(ids))
     }
 
+    @Log
     @PostMapping("upload")
     fun upload(@RequestParam("files") files: Array<MultipartFile>): RestResult {
 

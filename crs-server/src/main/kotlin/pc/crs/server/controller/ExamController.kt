@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.TypeReference
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import pc.crs.common.aop.annotation.Log
 import pc.crs.common.base.controller.BaseController
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.successRestResult
@@ -15,11 +16,13 @@ import pc.crs.server.service.ExamService
 class ExamController(@Autowired override val service: ExamService)
     : BaseController<ExamDO, ExamDO, ExamService>() {
 
+    @Log
     @GetMapping("{id}/detail")
     fun fetchExamDetail(@PathVariable id: Long): RestResult {
         return successRestResult(service.fetchExamDetail(id))
     }
 
+    @Log
     @PostMapping("{id}/editQuestions")
     fun editQuestions(@PathVariable id: Long, @RequestBody json: String): RestResult {
         val questionIds = JSON.parseObject<List<Long>>(json, object : TypeReference<List<Long>>() {})

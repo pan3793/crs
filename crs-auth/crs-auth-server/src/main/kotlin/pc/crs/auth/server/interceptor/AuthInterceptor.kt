@@ -1,15 +1,13 @@
-package pc.crs.auth.client.interceptor
+package pc.crs.auth.server.interceptor
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.getBean
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
-import pc.crs.auth.client.manager.AuthManager
 import pc.crs.auth.common.context.AuthContextHolder
 import pc.crs.auth.common.dto.UserInfo
+import pc.crs.auth.server.service.AclService
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.noPermissionRestResult
 import pc.crs.common.constant.NO_PERMISSION_CODE
@@ -22,18 +20,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthInterceptor : HandlerInterceptorAdapter(), ApplicationContextAware {
-
-    // 暂时绕开当前版本 Feign Bug
-    lateinit var appCtx: ApplicationContext
-
-    override fun setApplicationContext(applicationContext: ApplicationContext) {
-        appCtx = applicationContext
-    }
-
-    val authManager: AuthManager by lazy {
-        appCtx.getBean<AuthManager>(AuthManager::javaClass)
-    }
+class AuthInterceptor(@Autowired val aclService: AclService) : HandlerInterceptorAdapter() {
 
     companion object {
         const val CRS_TOKEN = "CRS-TOKEN"
@@ -45,7 +32,7 @@ class AuthInterceptor : HandlerInterceptorAdapter(), ApplicationContextAware {
         val uri: String = request.requestURI
         logger.info("访问路径 uri={}", uri)
 
-        if (authManager.checkAnonymous(uri)) {
+        if (aclService.checkAnonymous(uri)) {
             logger.info("uri={} 允许匿名访问", uri)
             AuthContextHolder.setUserInfo(UserInfo(name = "anonymous"))
             return true
@@ -58,7 +45,7 @@ class AuthInterceptor : HandlerInterceptorAdapter(), ApplicationContextAware {
 
         token?.let {
             logger.info("获取到 token={}，开始权限检查", token)
-            val (code, message, userInfo) = authManager.checkPermission(token, uri)
+            val (code, message, userInfo) = aclService.checkPermission(token, uri)
             logger.info(message)
             when (code) {
                 SUCCESS_CODE -> {

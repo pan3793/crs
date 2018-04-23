@@ -32,9 +32,6 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             force "com.alibaba:fastjson:${fastjsonVersion}"
-            force "mysql:mysql-connector-java:${mysqlConnectorVersion}"
-            force "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
-            force "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
             force "io.springfox:springfox-swagger2:${swagger2Version}"
             force "io.springfox:springfox-swagger-ui:${swagger2Version}"
             force "cn.hutool:hutool-all:${hutoolVersion}"

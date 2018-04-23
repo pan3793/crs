@@ -5,7 +5,7 @@ import org.springframework.boot.runApplication
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 import org.springframework.cloud.openfeign.EnableFeignClients
 
-@SpringBootApplication(scanBasePackages = ["pc.crs.server", "pc.crs.auth.client"])
+@SpringBootApplication(scanBasePackages = ["pc.crs.server", "pc.crs.auth.client", "pc.crs.common.aop"])
 @EnableFeignClients(basePackages = ["pc.crs.server", "pc.crs.auth.client"])
 @EnableEurekaClient
 class ServerApplication

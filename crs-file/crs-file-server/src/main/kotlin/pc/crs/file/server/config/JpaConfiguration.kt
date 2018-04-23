@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.auditing.CurrentDateTimeProvider
 import org.springframework.data.domain.AuditorAware
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
-import pc.crs.auth.client.context.AuthContextHolder
+import pc.crs.auth.common.context.AuthContextHolder
 import java.util.*
 
 @Configuration

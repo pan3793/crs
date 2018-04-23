@@ -4,7 +4,6 @@ apply plugin: 'org.hidetake.ssh'
 dependencies {
     compile(project(':crs-auth:crs-auth-domain'))
     compile(project(':crs-auth:crs-auth-common'))
-    compile(project(':crs-auth:crs-auth-client'))
 
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-starter-openfeign'

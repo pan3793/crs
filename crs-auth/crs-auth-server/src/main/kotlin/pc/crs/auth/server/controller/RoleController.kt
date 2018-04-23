@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pc.crs.auth.domain.RoleDO
 import pc.crs.auth.server.service.RoleService
+import pc.crs.common.aop.annotation.Log
 import pc.crs.common.base.controller.BaseController
 import pc.crs.common.bean.RestResult
 import pc.crs.common.bean.successRestResult
@@ -15,6 +16,7 @@ import pc.crs.common.bean.successRestResult
 class RoleController(@Autowired override val service: RoleService)
     : BaseController<RoleDO, RoleDO, RoleService>() {
 
+    @Log
     @GetMapping("idNameList")
     fun getIdNameList(): RestResult {
         return successRestResult(service.getIdNameList())

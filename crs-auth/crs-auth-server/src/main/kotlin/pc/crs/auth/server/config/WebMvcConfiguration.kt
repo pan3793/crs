@@ -1,28 +1,16 @@
 package pc.crs.auth.server.config
 
-import org.springframework.beans.factory.getBean
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import pc.crs.auth.client.interceptor.AuthInterceptor
+import pc.crs.auth.server.interceptor.AuthInterceptor
 
 @Configuration
-class WebMvcConfiguration : WebMvcConfigurer, ApplicationContextAware {
-
-    // 暂时绕开当前版本 Feign Bug
-    lateinit var appCtx: ApplicationContext
-
-    override fun setApplicationContext(applicationContext: ApplicationContext) {
-        appCtx = applicationContext
-    }
-
-    val authInterceptor: AuthInterceptor by lazy {
-        appCtx.getBean<AuthInterceptor>(AuthInterceptor::javaClass)
-    }
+class WebMvcConfiguration(@Autowired val authInterceptor: AuthInterceptor)
+    : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-//        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
     }
 }

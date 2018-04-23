@@ -1,4 +1,4 @@
-package pc.crs.auth.client.context
+package pc.crs.auth.common.context
 
 import org.springframework.core.NamedInheritableThreadLocal
 import pc.crs.auth.common.dto.UserInfo
