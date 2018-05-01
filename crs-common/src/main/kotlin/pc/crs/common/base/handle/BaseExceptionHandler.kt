@@ -16,29 +16,25 @@ abstract class BaseExceptionHandler {
 
     @ExceptionHandler(RecordNotFoundException::class)
     fun handleRecordNotFoundException(e: RecordNotFoundException): RestResult {
-        e.printStackTrace()
-        logger.error("捕获到异常: {}", e.message)
+        logger.error("捕获到异常", e)
         return failureRestResult(e.message ?: "记录不存在")
     }
 
     @ExceptionHandler(ValidateException::class)
     fun handleValidateException(e: ValidateException): RestResult {
-        e.printStackTrace()
-        logger.error("捕获到异常: {}", e.message)
+        logger.error("捕获到异常", e)
         return failureRestResult(e.message ?: "数据不合法")
     }
 
     @ExceptionHandler(NoPermissionException::class)
     fun handleNoPermissionException(e: NoPermissionException): RestResult {
-        e.printStackTrace()
-        logger.error("捕获到异常: {}", e.message)
+        logger.error("捕获到异常", e)
         return noPermissionRestResult(e.message ?: "无权访问")
     }
 
     @ExceptionHandler(Throwable::class)
     fun handleThrowable(e: Throwable): RestResult {
-        e.printStackTrace()
-        logger.error("捕获到异常: {}", e.message)
+        logger.error("捕获到异常", e)
         return failureRestResult(e.message ?: "服务器发生异常")
     }
 }
