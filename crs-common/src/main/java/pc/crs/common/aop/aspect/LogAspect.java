@@ -92,6 +92,10 @@ public class LogAspect {
     }
 
     private boolean contains(Class<?>[] classes, Object object) {
+        // null参数都打印
+        if (object == null) {
+            return false;
+        }
         for (Class<?> clazz : classes) {
             if (clazz.isAssignableFrom(object.getClass()))
                 return true;
