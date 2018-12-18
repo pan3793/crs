@@ -1,18 +1,16 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.40'
-        springBootVersion = '2.0.1.RELEASE'
-        springCloudVersion = 'Finchley.RC1'
+        kotlinVersion = '1.2.51'
+        springBootVersion = '2.0.7.RELEASE'
+        springCloudVersion = 'Finchley.SR2'
         fastjsonVersion = '1.2.47'
-        mysqlConnectorVersion = '5.1.45'
+        mysqlConnectorVersion = '5.1.47'
         swagger2Version = '2.8.0'
         hutoolVersion = '4.0.8'
         sshPluginVersion = '2.9.0'
     }
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -46,11 +44,8 @@ allprojects {
     }
 
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url 'https://repo.spring.io/libs-milestone' }
-        mavenLocal()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring' }
     }
 }
 
